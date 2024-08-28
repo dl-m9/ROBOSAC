@@ -227,7 +227,7 @@ class DetModelBase(nn.Module):
                     if not( j in collab_agent_list or j == trial_agent_id ):
                         continue
                     
-                self.neighbor_feat_list.append(warp_feat)
+                self.neighbor_feat_list.append(warp_feat) # don't include the ego, just neighbors' aligned features
                 self.neighbor_feat_list_dict
 
                 

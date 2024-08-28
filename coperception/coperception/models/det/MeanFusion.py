@@ -9,4 +9,4 @@ class MeanFusion(FusionBase):
         super().__init__(config, layer, in_channels, kd_flag, num_agent, compress_level, only_v2i)
 
     def fusion(self):
-        return torch.mean(torch.stack(self.neighbor_feat_list), dim=0)
+        return torch.mean(torch.stack(self.neighbor_feat_list), dim=0)  # 最终的特征融合

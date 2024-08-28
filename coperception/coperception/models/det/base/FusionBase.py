@@ -62,18 +62,18 @@ class FusionBase(IntermediateModelBase):
 
             
 
-            for b in range(batch_size):
+            for b in range(batch_size): 
 
-                self.num_agent = num_agent_tensor[b, 0]
-                for i in range(self.num_agent):
-                    self.tg_agent = local_com_mat[b, i]
+                self.num_agent = num_agent_tensor[b, 0] # num_agent: the number of agents
+                for i in range(self.num_agent): # 在一个batch里循环每一个agent
+                    self.tg_agent = local_com_mat[b, i] # what is tg_agent?
                     self.neighbor_feat_list = []
                     self.neighbor_feat_list.append(self.tg_agent)
                     all_warp = trans_matrices[b, i]  # transformation [2 5 5 4 4]
                     # i == 1: ego agent
 
-                
-                    if ego_agent is not None and i == ego_agent:      
+                    # build neighbors feature list for each agent 
+                    if ego_agent is not None and i == ego_agent: # 第i个agent是ego agent 
                         # 在这个条件语句下可以得到 neighbors_feature_list
                         super().build_neighbors_feature_list(
                             b,
@@ -91,7 +91,7 @@ class FusionBase(IntermediateModelBase):
                             eps
                         )
                     else:
-                        super().build_neighbors_feature_list(
+                        super().build_neighbors_feature_list(     
                             b,
                             i,
                             all_warp,
@@ -104,8 +104,8 @@ class FusionBase(IntermediateModelBase):
 
 
                     # feature update
-                    local_com_mat_update[b, i] = self.fusion()
-
+                    local_com_mat_update[b, i] = self.fusion()   # 最终每个 agent 以其自身为 ego 的特征融合结果
+            
             # weighted feature maps is passed to decoder
             feat_fuse_mat = super().agents_to_batch(local_com_mat_update)
 
@@ -123,7 +123,7 @@ class FusionBase(IntermediateModelBase):
         decoded_layers = super().get_decoded_layers(
             encoded_layers, feat_fuse_mat, batch_size
         )
-        x = decoded_layers[0]
+        x = decoded_layers[0] # 只取第一个，因为是 ego 的结果
 
         cls_preds, loc_preds, result = super().get_cls_loc_result(x)
 
