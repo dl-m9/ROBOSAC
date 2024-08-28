@@ -1,5 +1,6 @@
 from coperception.models.det.base.IntermediateModelBase import IntermediateModelBase
 import torch
+import pickle
 
 class FusionBase(IntermediateModelBase):
     def __init__(
@@ -66,14 +67,17 @@ class FusionBase(IntermediateModelBase):
 
                 self.num_agent = num_agent_tensor[b, 0] # num_agent: the number of agents
                 for i in range(self.num_agent): # 在一个batch里循环每一个agent
-                    self.tg_agent = local_com_mat[b, i] # what is tg_agent?
+                    self.tg_agent = local_com_mat[b, i] # tg_agent is the current agent's feature map
                     self.neighbor_feat_list = []
                     self.neighbor_feat_list.append(self.tg_agent)
                     all_warp = trans_matrices[b, i]  # transformation [2 5 5 4 4]
                     # i == 1: ego agent
-
+                    self.collaboration_feature_dict = {}
+                    
                     # build neighbors feature list for each agent 
                     if ego_agent is not None and i == ego_agent: # 第i个agent是ego agent 
+                        self.collaboration_feature_dict['ego'] = self.tg_agent
+
                         # 在这个条件语句下可以得到 neighbors_feature_list
                         super().build_neighbors_feature_list(
                             b,
@@ -101,6 +105,11 @@ class FusionBase(IntermediateModelBase):
                             size,
                             trans_matrices,
                         )
+
+                    self.collaboration_feature_dict['neighbors'] = self.attacked_feature_dict
+                    # TODO:save collaboration_feature_dict
+                    # with open('collaboration_feature_dict.pkl', 'wb') as f:
+                    #     pickle.dump(self.collaboration_feature_dict, f)
 
 
                     # feature update

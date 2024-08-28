@@ -47,7 +47,6 @@ class DetModelBase(nn.Module):
         self.layer = layer
         self.p_com_outage = p_com_outage
         self.neighbor_feat_list = []
-        self.neighbor_feat_list_dict = {}
         self.tg_agent = None
         self.only_v2i = only_v2i
 
@@ -197,11 +196,11 @@ class DetModelBase(nn.Module):
             size (tuple): Size of the feature map.
         """
         for j in range(num_agent):
+            self.attacked_feature_dict = {}
             if j != agent_idx: # The agent_idx is ususally the ego's idx
                 if self.only_v2i and agent_idx != 0 and j != 0:
                     continue
                 
-                flag = 0 # without attack
                 # spatially align the feature
                 warp_feat = DetModelBase.feature_transformation( 
                         b,
@@ -219,7 +218,6 @@ class DetModelBase(nn.Module):
                     eta = torch.clamp(pert[j], min=-eps, max=eps)
                     # Apply perturbation
                     warp_feat = warp_feat + eta
-                    flag = 1 # with attack
 
                 
                 if collab_agent_list is not None:
@@ -228,7 +226,6 @@ class DetModelBase(nn.Module):
                         continue
                     
                 self.neighbor_feat_list.append(warp_feat) # don't include the ego, just neighbors' aligned features
-                self.neighbor_feat_list_dict
 
                 
 

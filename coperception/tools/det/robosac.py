@@ -633,6 +633,9 @@ def main(args):
             elif args.adv_method == 'bim' or args.adv_method == 'cw-l2':
                 # BIM/CW-L2 zero init
                 pert = torch.zeros(6, 256, 32, 32)
+            elif args.adv_method == 'GN':
+                # Guassian noise
+                pert = torch.normal(mean=0, std=0.2, size=(6, 256, 32, 32))
             else:
                 raise NotImplementedError
 
