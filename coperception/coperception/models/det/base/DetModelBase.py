@@ -212,13 +212,13 @@ class DetModelBase(nn.Module):
                         size,
                         trans_matrices,
                     )
-
+                if_j_attacked = 0
                 if pert is not None and j in attacker_list:
                     # clip
                     eta = torch.clamp(pert[j], min=-eps, max=eps)
                     # Apply perturbation
                     warp_feat = warp_feat + eta
-
+                    if_j_attacked = 1
                 
                 if collab_agent_list is not None:
                     # only fuse with collab agent and trial agent
@@ -226,7 +226,7 @@ class DetModelBase(nn.Module):
                         continue
                     
                 self.neighbor_feat_list.append(warp_feat) # don't include the ego, just neighbors' aligned features
-
+                self.attacked_feature_dict[j] = [warp_feat, if_j_attacked]
                 
 
     def get_decoded_layers(self, encoded_layers, feature_fuse_matrix, batch_size):
