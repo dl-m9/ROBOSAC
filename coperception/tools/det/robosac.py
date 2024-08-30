@@ -560,6 +560,7 @@ def main(args):
             'attacker_list' : None,
             'eps': None,
             "trans_matrices": trans_matrices.to(device),
+            "filenames": filenames,
         }
 
         if args.robosac == "performance_eval":
@@ -569,12 +570,12 @@ def main(args):
 
         # STEP 1:
         # get original ego agent class prediction of all anchors, without adv pert and fuse, return cls pred of all agents
-        cls_result  = fafmodule.cls_predict(data, batch_size, no_fuse=True)
-        # change logits to one-hot
-        mean = torch.mean(cls_result, dim=2)
-        cls_result[:,:,0] = cls_result[:,:,0] > mean
-        cls_result[:,:,1] = cls_result[:,:,1] > mean
-        pseudo_gt = cls_result.clone().detach()
+        # cls_result  = fafmodule.cls_predict(data, batch_size, no_fuse=True)
+        # # change logits to one-hot
+        # mean = torch.mean(cls_result, dim=2)
+        # cls_result[:,:,0] = cls_result[:,:,0] > mean
+        # cls_result[:,:,1] = cls_result[:,:,1] > mean
+        # pseudo_gt = cls_result.clone().detach()
         # torch.Size([6, 393216, 2])
 
         if args.visualization:
@@ -625,6 +626,11 @@ def main(args):
         else:
             # There are attackers among us: 
 
+            # random select a attack.
+            if args.random_attack:
+                args.adv_method = random.choice(['pgd', 'bim', 'cw-l2', 'GN', 'fgsm'])
+
+
             # STEP 2:
             # generate adv perturb
             if args.adv_method == 'pgd':
@@ -638,7 +644,7 @@ def main(args):
                 pert = torch.normal(mean=0.1, std=10, size=(6, 256, 32, 32))
             elif args.adv_method == 'fgsm':
                 # FGSM random init
-                pert = torch.randn(6, 512, 32, 32) * 10
+                pert = torch.randn(6, 256, 32, 32) * 10
                 args.adv_iter = 0
             else:
                 raise NotImplementedError
@@ -683,7 +689,7 @@ def main(args):
                     # STEP 3: Use inverted classification ground truth, minimze loss wrt inverted gt, to generate adv attacks based on cls(only)
                     # NOTE: Actual ground truth is not always available especially in real-world attacks
                     # We define the adversarial loss of the perturbed output with respect to an unperturbed output pseudo_gt instead of the ground truth
-                    cls_loss = fafmodule.cls_step(data, batch_size, ego_loss_only=args.ego_loss_only, ego_agent=args.ego_agent, invert_gt=True, self_result=pseudo_gt, adv_method=args.adv_method)
+                    cls_loss = fafmodule.cls_step(data, batch_size, ego_loss_only=args.ego_loss_only, ego_agent=args.ego_agent, invert_gt=True, adv_method=args.adv_method)
 
                     pert = pert + args.pert_alpha * pert.grad.sign() * -1
                     pert.detach_()
@@ -1231,7 +1237,7 @@ if __name__ == "__main__":
     parser.add_argument('--adv_iter', type=int, default=15, help='adv iterations of computing perturbation')
 
     # Scene and frame settings
-    parser.add_argument('--scene_id', type=list, default=[8], help='target evaluation scene') #Scene 8, 96, 97 has 6 agents.
+    parser.add_argument('--scene_id', type=list, default=[8,96,97], help='target evaluation scene') #Scene 8, 96, 97 has 6 agents.
     parser.add_argument('--sample_id', type=int, default=None, help='target evaluation sample')
     
     # Among Us modes and parameters
@@ -1245,6 +1251,7 @@ if __name__ == "__main__":
     parser.add_argument('--fix_attackers', action="store_true", help='if true, attackers will not change in different frames')
     parser.add_argument('--use_history_frame', action="store_true", help='use history frame for computing the consensus, reduce 1 step of forward prop.')
     parser.add_argument('--partial_upperbound', action="store_true", help='use with specifying ransan_k, to perform clean collaboration with a subset of teammates')
+    parser.add_argument('--random_attack', action="store_true", help='randomly select an attack method')
     
     torch.multiprocessing.set_sharing_strategy("file_system")
     args = parser.parse_args()

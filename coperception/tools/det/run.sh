@@ -1,12 +1,12 @@
-export PYTHONPATH=${PWD}
-CUDA_VISIBLE_DEVICES=3 
+#!/bin/bash
 
-python robosac.py \
+export PYTHONPATH=${PWD} 
+export CUDA_VISIBLE_DEVICES=3 
+
+nohup python robosac.py \
     --log \
     --robosac no_defense \
-    --adv_method GN \
-    --visualization \
-    # --adv_iter 15 \   # Default: 15
-    # --number_of_attackers 1 \
-    # --ego_agent 1 \
+    --adv_method fgsm \
+    --random_attack \
+    --number_of_attackers 2 &
 

@@ -14,9 +14,10 @@
             "args": [
                 "--log", 
                 "--robosac", "no_defense",
-                "--adv_method", "GN",
-                "--visualization",
+                "--adv_method", "fgsm",
+                // "--visualization",
                 // "--no_cross_road",
+                "--random_attack"
             ],
             // "cwd": "/data2/user2/senkang/CP-GuardBench/coperception/tools/det/",
             "env":{

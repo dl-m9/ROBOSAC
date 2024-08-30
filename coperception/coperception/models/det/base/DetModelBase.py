@@ -195,8 +195,9 @@ class DetModelBase(nn.Module):
             device: The device used for PyTorch.
             size (tuple): Size of the feature map.
         """
+
+        self.attacked_feature_dict = {}
         for j in range(num_agent):
-            self.attacked_feature_dict = {}
             if j != agent_idx: # The agent_idx is ususally the ego's idx
                 if self.only_v2i and agent_idx != 0 and j != 0:
                     continue
@@ -227,7 +228,9 @@ class DetModelBase(nn.Module):
                     
                 self.neighbor_feat_list.append(warp_feat) # don't include the ego, just neighbors' aligned features
                 self.attacked_feature_dict[j] = [warp_feat, if_j_attacked]
-                
+
+
+
 
     def get_decoded_layers(self, encoded_layers, feature_fuse_matrix, batch_size):
         """Replace the collaboration layer of the output from the encoder with fused feature maps.

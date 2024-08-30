@@ -491,8 +491,12 @@ class FaFModule(object):
                 loss_cls = torch.sum(self.criterion['cls'](result['cls'][ego_agent],labels[ego_agent]))
                 # print(result['cls'][0].shape,labels[0].shape)
                 # print("loss cls:", loss_cls)
-        # elif adv_method == 'fgsm':
-        
+        elif adv_method == 'fgsm':
+            
+            labels = labels.bool()
+            labels = ~labels
+            labels = labels.float()
+            loss_cls = torch.sum(self.criterion['cls'](result['cls'],labels)) / N
         elif adv_method == 'cw-l2':
             def cw_loss(result, labels):
                 kappa = 0
@@ -633,6 +637,7 @@ class FaFModule(object):
         eps = data['eps']
         ego_agent = data['ego_agent']
 
+        current_file_name = data["filenames"][0]
         # if self.MGDA:
         #    x = self.encoder(bev_seq)
         #    result = self.head(x)
@@ -695,7 +700,7 @@ class FaFModule(object):
                 batch_size=batch_size, pert=pert, no_fuse=no_fuse, 
                 unadv_pert=unadv_pert, collab_agent_list=collab_agent_list, 
                 trial_agent_id=trial_agent_id, attacker_list=attacker_list,
-                eps=eps, ego_agent=ego_agent
+                eps=eps, ego_agent=ego_agent, current_file_name=current_file_name
             )
 
         N = bev_seq.shape[0]

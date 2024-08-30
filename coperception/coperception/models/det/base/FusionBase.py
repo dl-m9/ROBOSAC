@@ -1,6 +1,7 @@
 from coperception.models.det.base.IntermediateModelBase import IntermediateModelBase
 import torch
 import pickle
+import json
 
 class FusionBase(IntermediateModelBase):
     def __init__(
@@ -21,7 +22,7 @@ class FusionBase(IntermediateModelBase):
             "Please implement this method for specific fusion strategies"
         )
 
-    def forward(self, bevs, trans_matrices, num_agent_tensor, batch_size=1, pert=None, eps=None, attacker_list=None, ego_agent=None, unadv_pert=None, kick=False, no_fuse=False, collab_agent_list=None, trial_agent_id=None):
+    def forward(self, bevs, trans_matrices, num_agent_tensor, batch_size=1, pert=None, eps=None, attacker_list=None, ego_agent=None, unadv_pert=None, kick=False, no_fuse=False, collab_agent_list=None, trial_agent_id=None, current_file_name=None):
 
         bevs = bevs.permute(0, 1, 4, 2, 3)  # (Batch, seq, z, h, w)
         encoded_layers = self.u_encoder(bevs)
@@ -51,6 +52,10 @@ class FusionBase(IntermediateModelBase):
                 # print("Unadversarial perturbation is not applied")
 
             feat_list = super().build_feature_list(batch_size, feat_maps)
+            # print("feat_list length: ", len(feat_list))
+
+            # for i, feat in enumerate(feat_list):
+            #     print(f"Tensor {i} shape: {feat.shape}\n")  
 
             local_com_mat = super().build_local_communication_matrix(
                 feat_list
@@ -72,11 +77,9 @@ class FusionBase(IntermediateModelBase):
                     self.neighbor_feat_list.append(self.tg_agent)
                     all_warp = trans_matrices[b, i]  # transformation [2 5 5 4 4]
                     # i == 1: ego agent
-                    self.collaboration_feature_dict = {}
                     
                     # build neighbors feature list for each agent 
                     if ego_agent is not None and i == ego_agent: # 第i个agent是ego agent 
-                        self.collaboration_feature_dict['ego'] = self.tg_agent
 
                         # 在这个条件语句下可以得到 neighbors_feature_list
                         super().build_neighbors_feature_list(
@@ -94,6 +97,18 @@ class FusionBase(IntermediateModelBase):
                             attacker_list,
                             eps
                         )
+                        self.attacked_feature_dict[i] = [self.tg_agent, 'ego']
+                        # TODO:save attacked_feature_dict
+                        # scene + frame + attack_name 
+                        if current_file_name: 
+                            file_name = current_file_name[0][0].split('/')[-2]
+                            # attacked_feature_dict_list = {k: [v[0].tolist(), v[1]] for k, v in self.attacked_feature_dict.items()}
+                            with open(f'/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/test/{file_name}.pkl', 'wb') as f:
+                                # json.dump(attacked_feature_dict_list, f)
+                                pickle.dump(self.attacked_feature_dict, f)
+                            print(f"Attacked feature dict saved to {file_name}.json")
+
+
                     else:
                         super().build_neighbors_feature_list(     
                             b,
@@ -106,10 +121,8 @@ class FusionBase(IntermediateModelBase):
                             trans_matrices,
                         )
 
-                    self.collaboration_feature_dict['neighbors'] = self.attacked_feature_dict
-                    # TODO:save collaboration_feature_dict
-                    # with open('collaboration_feature_dict.pkl', 'wb') as f:
-                    #     pickle.dump(self.collaboration_feature_dict, f)
+                    
+                    
 
 
                     # feature update
@@ -123,7 +136,7 @@ class FusionBase(IntermediateModelBase):
             feat_maps, size = super().get_feature_maps_and_size(encoded_layers)
 
             feat_list = super().build_feature_list(batch_size, feat_maps)
-
+            
             local_com_mat = super().build_local_communication_matrix(
                 feat_list
             )  # [2 5 512 16 16] [batch, agent, channel, height, width]
