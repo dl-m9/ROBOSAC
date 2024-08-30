@@ -491,6 +491,8 @@ class FaFModule(object):
                 loss_cls = torch.sum(self.criterion['cls'](result['cls'][ego_agent],labels[ego_agent]))
                 # print(result['cls'][0].shape,labels[0].shape)
                 # print("loss cls:", loss_cls)
+        # elif adv_method == 'fgsm':
+        
         elif adv_method == 'cw-l2':
             def cw_loss(result, labels):
                 kappa = 0

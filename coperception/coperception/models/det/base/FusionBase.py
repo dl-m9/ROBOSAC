@@ -54,7 +54,7 @@ class FusionBase(IntermediateModelBase):
 
             local_com_mat = super().build_local_communication_matrix(
                 feat_list
-            )  # [2 5 512 16 16] [batch, agent, channel, height, width]
+            )  # [1 6 256 32 32] [batch, agent, channel, height, width]
 
             
             local_com_mat_update = super().build_local_communication_matrix(
@@ -132,7 +132,7 @@ class FusionBase(IntermediateModelBase):
         decoded_layers = super().get_decoded_layers(
             encoded_layers, feat_fuse_mat, batch_size
         )
-        x = decoded_layers[0] # 只取第一个，因为是 ego 的结果
+        x = decoded_layers[0]
 
         cls_preds, loc_preds, result = super().get_cls_loc_result(x)
 

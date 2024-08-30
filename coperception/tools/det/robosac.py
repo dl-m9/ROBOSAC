@@ -635,7 +635,11 @@ def main(args):
                 pert = torch.zeros(6, 256, 32, 32)
             elif args.adv_method == 'GN':
                 # Guassian noise
-                pert = torch.normal(mean=0, std=0.2, size=(6, 256, 32, 32))
+                pert = torch.normal(mean=0.1, std=10, size=(6, 256, 32, 32))
+            elif args.adv_method == 'fgsm':
+                # FGSM random init
+                pert = torch.randn(6, 512, 32, 32) * 10
+                args.adv_iter = 0
             else:
                 raise NotImplementedError
 
@@ -670,18 +674,19 @@ def main(args):
             data['attacker_list'] = attacker_list
             data['eps'] = args.eps
             data['no_fuse'] = False
-            for i in range(args.adv_iter):
-                pert.requires_grad = True
-                # Introduce adv perturbation
-                data['pert'] = pert.to(device)
-                        
-                # STEP 3: Use inverted classification ground truth, minimze loss wrt inverted gt, to generate adv attacks based on cls(only)
-                # NOTE: Actual ground truth is not always available especially in real-world attacks
-                # We define the adversarial loss of the perturbed output with respect to an unperturbed output pseudo_gt instead of the ground truth
-                cls_loss = fafmodule.cls_step(data, batch_size, ego_loss_only=args.ego_loss_only, ego_agent=args.ego_agent, invert_gt=True, self_result=pseudo_gt, adv_method=args.adv_method)
+            if args.adv_method != 'GN':
+                for i in range(args.adv_iter):
+                    pert.requires_grad = True
+                    # Introduce adv perturbation
+                    data['pert'] = pert.to(device)
+                            
+                    # STEP 3: Use inverted classification ground truth, minimze loss wrt inverted gt, to generate adv attacks based on cls(only)
+                    # NOTE: Actual ground truth is not always available especially in real-world attacks
+                    # We define the adversarial loss of the perturbed output with respect to an unperturbed output pseudo_gt instead of the ground truth
+                    cls_loss = fafmodule.cls_step(data, batch_size, ego_loss_only=args.ego_loss_only, ego_agent=args.ego_agent, invert_gt=True, self_result=pseudo_gt, adv_method=args.adv_method)
 
-                pert = pert + args.pert_alpha * pert.grad.sign() * -1
-                pert.detach_()
+                    pert = pert + args.pert_alpha * pert.grad.sign() * -1
+                    pert.detach_()
             
             # Detach and clone perturbations from Pytorch computation graph, in case of gradient misuse.
             pert = pert.detach().clone()
@@ -1127,7 +1132,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-d",
         "--data",
-        default="/data2/user2/senkang/ROBOSAC/V2X-Sim-det/train",
+        default="/data2/user2/senkang/CP-GuardBench/V2X-Sim-det/test/",
         type=str,
         help="The path to the preprocessed sparse BEV training data",
     )
@@ -1140,7 +1145,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--resume",
         # default = "../../ckpt/meanfusion/epoch_advtrain_49.pth" #use this adv epoch 49 trained from scratch
-          default="../../ckpt/meanfusion/epoch_49.pth",
+        default="/data2/user2/senkang/CP-GuardBench/coperception/ckpt/meanfusion/epoch_49.pth",
         type=str,
         help="The path to the saved model that is loaded to resume training",
     )

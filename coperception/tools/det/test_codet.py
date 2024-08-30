@@ -497,11 +497,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "-d",
         "--data",
-        default=None,
+        default='/data2/user2/senkang/CP-GuardBench/V2X-Sim-det/test',
         type=str,
         help="The path to the preprocessed sparse BEV training data",
     )
-    parser.add_argument("--batch", default=4, type=int, help="The number of scene")
+    parser.add_argument("--batch", default=1, type=int, help="The number of scene")
     parser.add_argument("--nepoch", default=100, type=int, help="Number of epochs")
     parser.add_argument("--nworker", default=1, type=int, help="Number of workers")
     parser.add_argument("--lr", default=0.001, type=float, help="Initial learning rate")
@@ -509,7 +509,7 @@ if __name__ == "__main__":
     parser.add_argument("--logpath", default="", help="The path to the output log file")
     parser.add_argument(
         "--resume",
-        default="",
+        default="/data2/user2/senkang/CP-GuardBench/coperception/ckpt/meanfusion/epoch_49.pth",
         type=str,
         help="The path to the saved model that is loaded to resume training",
     )
@@ -542,10 +542,10 @@ if __name__ == "__main__":
         help="Number of message passing for V2VNet",
     )
     parser.add_argument(
-        "--visualization", type=int, default=0, help="Visualize validation result"
+        "--visualization", type=int, default=1, help="Visualize validation result"
     )
     parser.add_argument(
-        "--com", default="", type=str, help="disco/when2com/v2v/sum/mean/max/cat/agent"
+        "--com", default="mean", type=str, help="disco/when2com/v2v/sum/mean/max/cat/agent"
     )
     parser.add_argument(
         "--bound",

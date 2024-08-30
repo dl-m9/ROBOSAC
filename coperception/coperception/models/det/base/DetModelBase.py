@@ -215,9 +215,9 @@ class DetModelBase(nn.Module):
                 if_j_attacked = 0
                 if pert is not None and j in attacker_list:
                     # clip
-                    eta = torch.clamp(pert[j], min=-eps, max=eps)
+                    # eta = torch.clamp(pert[j], min=-eps, max=eps)
                     # Apply perturbation
-                    warp_feat = warp_feat + eta
+                    warp_feat = warp_feat + pert[j]
                     if_j_attacked = 1
                 
                 if collab_agent_list is not None:
