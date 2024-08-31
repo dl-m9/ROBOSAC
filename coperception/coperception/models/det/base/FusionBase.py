@@ -106,7 +106,7 @@ class FusionBase(IntermediateModelBase):
                             with open(f'/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/test/{file_name}.pkl', 'wb') as f:
                                 # json.dump(attacked_feature_dict_list, f)
                                 pickle.dump(self.attacked_feature_dict, f)
-                            print(f"Attacked feature dict saved to {file_name}.json")
+                            print(f"Attacked feature dict saved to {file_name}.pkl")
 
 
                     else:
