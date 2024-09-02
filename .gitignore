@@ -8,4 +8,5 @@ CP-GuardBench*
 nohup.out
 
 
-cpguard+
+cpguard/logs
+cpguard/runs
