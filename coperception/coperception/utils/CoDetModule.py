@@ -622,7 +622,7 @@ class FaFModule(object):
             return loss_cls.item()
 
     # normal case (pre & intermediate)
-    def predict_all(self, data, batch_size, validation=True, num_agent=5):
+    def predict_all(self, data, batch_size, validation=True, num_agent=5, adv_method=None):
         bev_seq = data["bev_seq"]
         # vis_maps = data["vis_maps"]
         trans_matrices = data["trans_matrices"]
@@ -700,7 +700,7 @@ class FaFModule(object):
                 batch_size=batch_size, pert=pert, no_fuse=no_fuse, 
                 unadv_pert=unadv_pert, collab_agent_list=collab_agent_list, 
                 trial_agent_id=trial_agent_id, attacker_list=attacker_list,
-                eps=eps, ego_agent=ego_agent, current_file_name=current_file_name
+                eps=eps, ego_agent=ego_agent, current_file_name=current_file_name, adv_method=adv_method
             )
 
         N = bev_seq.shape[0]

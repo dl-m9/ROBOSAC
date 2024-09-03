@@ -206,7 +206,7 @@ class V2XSimDet(Dataset):
             gt_dict = self.cache[agent_id][idx]
         else:
             seq_file = self.seq_files[agent_id][idx]
-            gt_data_handle = np.load(seq_file, allow_pickle=True)
+            gt_data_handle = np.load(seq_file, allow_pickle=True) # 没有文件
             if gt_data_handle == 0:
                 empty_flag = True
                 padded_voxel_points = []

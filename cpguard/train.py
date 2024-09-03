@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
     
     batch_size = 1 # do not change this 
-    num_epochs = 100
+    num_epochs = 300
     training = True
     resume = True
 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
         start_epoch = 0
         if resume:
             # Load the latest pretrained weights
-            log_dir = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/2024-09-02-20-32-18'
+            log_dir = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/resnet50-te2024-09-02-20-32-18'
             pth_files = [f for f in os.listdir(log_dir) if f.endswith('.pth')]
             latest_pth = max(pth_files, key=lambda x: int(x.split('.')[0]))
             pretrained_weights_path = os.path.join(log_dir, latest_pth)

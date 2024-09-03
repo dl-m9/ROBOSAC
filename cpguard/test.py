@@ -12,7 +12,7 @@ def test_model():
     eval_dataloader = DataLoader(eval_dataset, batch_size=1, shuffle=True)
 
     model = ResNetBinaryClassifier().to('cuda')
-    pretrained_weights_path = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/resnet50-2024-09-02-20-32-18/99.pth'
+    pretrained_weights_path = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/resnet50-2024-09-02-20-32-18/299.pth'
     model.load_state_dict(torch.load(pretrained_weights_path))
     model.to('cuda')
     model.eval()

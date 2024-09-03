@@ -3,10 +3,14 @@
 export PYTHONPATH=${PWD} 
 export CUDA_VISIBLE_DEVICES=3 
 
-nohup python robosac.py \
+python robosac.py \
     --log \
     --robosac no_defense \
     --adv_method fgsm \
-    --random_attack \
-    --number_of_attackers 2 &
+    --number_of_attackers 1 \
+    --random_attack
+    # --visualization
 
+
+
+# 注意，生成数据的时候不要开启 visualization

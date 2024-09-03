@@ -227,7 +227,8 @@ class DetModelBase(nn.Module):
                         continue
                     
                 self.neighbor_feat_list.append(warp_feat) # don't include the ego, just neighbors' aligned features
-                self.attacked_feature_dict[j] = [warp_feat, if_j_attacked]
+                if not torch.equal(warp_feat, torch.zeros(256, 32,32).to('cuda')):
+                    self.attacked_feature_dict[j] = [warp_feat, if_j_attacked]
 
 
 

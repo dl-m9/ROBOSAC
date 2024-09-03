@@ -515,12 +515,12 @@ def main(args):
         idx = cut[cut.rfind('_') + 1:cut.rfind('/')]
         
 
-        if (int(seq_name) not in args.scene_id):
-            continue
+        # if (int(seq_name) not in args.scene_id):
+        #     continue
         
-        if (args.sample_id is not None):
-            if (int(idx) < args.sample_id):
-                continue
+        # if (args.sample_id is not None):
+        #     if (int(idx) < args.sample_id):
+        #         continue
 
         frame_seq += 1
         print_and_write_log("\nScene {}, Frame {}:".format(seq_name, idx))
@@ -531,6 +531,21 @@ def main(args):
 
         if args.no_cross_road:
             num_all_agents -= 1
+
+        # 保证数据正常
+        padded_voxel_point_list = list(padded_voxel_point_list)
+        for i, item in enumerate(padded_voxel_point_list):
+            if not isinstance(item, torch.Tensor) or item.shape != torch.Size([1, 1, 256, 256, 13]):
+                padded_voxel_point_list[i] = torch.zeros(1, 1, 256, 256, 13)
+        padded_voxel_point_list = tuple(padded_voxel_point_list)
+
+        padded_voxel_points_teacher_list = list(padded_voxel_points_teacher_list)
+        for i, item in enumerate(padded_voxel_points_teacher_list):
+            if not isinstance(item, torch.Tensor) or item.shape != torch.Size([1, 1, 256, 256, 13]):
+                padded_voxel_points_teacher_list[i] = torch.zeros(1, 1, 256, 256, 13)
+        padded_voxel_points_teacher_list = tuple(padded_voxel_points_teacher_list)
+        
+
         padded_voxel_points = torch.cat(tuple(padded_voxel_point_list), 0)
         padded_voxel_points_teacher = torch.cat(tuple(padded_voxel_points_teacher_list), 0)
 
@@ -629,6 +644,7 @@ def main(args):
             # random select a attack.
             if args.random_attack:
                 args.adv_method = random.choice(['pgd', 'bim', 'cw-l2', 'GN', 'fgsm'])
+                print(f'Adv method is {args.adv_method}')
 
 
             # STEP 2:
@@ -645,7 +661,7 @@ def main(args):
             elif args.adv_method == 'fgsm':
                 # FGSM random init
                 pert = torch.randn(6, 256, 32, 32) * 10
-                args.adv_iter = 0
+                args.adv_iter = 1
             else:
                 raise NotImplementedError
 
@@ -680,7 +696,7 @@ def main(args):
             data['attacker_list'] = attacker_list
             data['eps'] = args.eps
             data['no_fuse'] = False
-            if args.adv_method != 'GN':
+            if args.adv_method in ['pgd', 'bim', 'cw-l2', 'fgsm']:
                 for i in range(args.adv_iter):
                     pert.requires_grad = True
                     # Introduce adv perturbation
@@ -707,7 +723,7 @@ def main(args):
                 # attacker is always attacking and no defense is applied
                 data['pert'] = pert.to(device)
                 data['no_fuse'] = False
-                loss, cls_loss, loc_loss, result = fafmodule.predict_all(data, 1, num_agent=num_agent)
+                loss, cls_loss, loc_loss, result = fafmodule.predict_all(data, 1, num_agent=num_agent, adv_method=args.adv_method)
                 det_results_local, annotations_local = local_eval(num_agent, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result, config, det_results_local, annotations_local)
                 continue
             
@@ -1138,7 +1154,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-d",
         "--data",
-        default="/data2/user2/senkang/CP-GuardBench/V2X-Sim-det/test/",
+        default="/data2/user2/senkang/CP-GuardBench/V2X-Sim-det/train/",
         type=str,
         help="The path to the preprocessed sparse BEV training data",
     )
@@ -1237,7 +1253,7 @@ if __name__ == "__main__":
     parser.add_argument('--adv_iter', type=int, default=15, help='adv iterations of computing perturbation')
 
     # Scene and frame settings
-    parser.add_argument('--scene_id', type=list, default=[8,96,97], help='target evaluation scene') #Scene 8, 96, 97 has 6 agents.
+    parser.add_argument('--scene_id', type=list, default=[5], help='target evaluation scene') #Scene 8, 96, 97 has 6 agents.
     parser.add_argument('--sample_id', type=int, default=None, help='target evaluation sample')
     
     # Among Us modes and parameters

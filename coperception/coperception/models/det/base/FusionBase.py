@@ -2,6 +2,8 @@ from coperception.models.det.base.IntermediateModelBase import IntermediateModel
 import torch
 import pickle
 import json
+import matplotlib.pyplot as plt
+import os
 
 class FusionBase(IntermediateModelBase):
     def __init__(
@@ -22,7 +24,7 @@ class FusionBase(IntermediateModelBase):
             "Please implement this method for specific fusion strategies"
         )
 
-    def forward(self, bevs, trans_matrices, num_agent_tensor, batch_size=1, pert=None, eps=None, attacker_list=None, ego_agent=None, unadv_pert=None, kick=False, no_fuse=False, collab_agent_list=None, trial_agent_id=None, current_file_name=None):
+    def forward(self, bevs, trans_matrices, num_agent_tensor, batch_size=1, pert=None, eps=None, attacker_list=None, ego_agent=None, unadv_pert=None, kick=False, no_fuse=False, collab_agent_list=None, trial_agent_id=None, current_file_name=None, adv_method=None):
 
         bevs = bevs.permute(0, 1, 4, 2, 3)  # (Batch, seq, z, h, w)
         encoded_layers = self.u_encoder(bevs)
@@ -100,13 +102,33 @@ class FusionBase(IntermediateModelBase):
                         self.attacked_feature_dict[i] = [self.tg_agent, 'ego']
                         # TODO:save attacked_feature_dict
                         # scene + frame + attack_name 
-                        if current_file_name: 
+                        if current_file_name:
+                            save_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/generated/'
+                            os.makedirs(save_dir, exist_ok=True)
+                            
                             file_name = current_file_name[0][0].split('/')[-2]
-                            # attacked_feature_dict_list = {k: [v[0].tolist(), v[1]] for k, v in self.attacked_feature_dict.items()}
-                            with open(f'/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/test/{file_name}.pkl', 'wb') as f:
-                                # json.dump(attacked_feature_dict_list, f)
+                            with open(os.path.join(save_dir, f'{file_name}.pkl'), 'wb') as f:
                                 pickle.dump(self.attacked_feature_dict, f)
-                            print(f"Attacked feature dict saved to {file_name}.pkl")
+                            print(f"Attacked feature dict saved to {os.path.join(save_dir, file_name)}.pkl")
+
+
+                            for agent_id, (feature_map, agent_type) in self.attacked_feature_dict.items():
+                                # Average across channels
+                                avg_feature = feature_map.mean(dim=0).cpu().numpy()
+                                
+                                # Create a new figure
+                                fig = plt.figure(figsize=(10, 8))
+                                plt.imshow(avg_feature, cmap='plasma')
+                                plt.colorbar()
+                                plt.title(f'Agent {agent_id} ({agent_type}) Feature Map')
+                                
+                                agent_postfix = 'adv_method' if agent_type == 1 else 'normal'
+                                # Save the figure without displaying
+                                save_path = os.path.join(save_dir, f'{file_name}_agent{agent_id}_{agent_postfix}.png')
+                                plt.savefig(save_path)
+                                plt.close(fig)
+
+                                print(f"Visualization saved to {save_path}")
 
 
                     else:
