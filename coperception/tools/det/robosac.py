@@ -692,6 +692,7 @@ def main(args):
                     fix_attackers_generated = True
 
             else:
+                print("all_agent_list:", all_agent_list)
                 attacker_list = random.sample(all_agent_list, k=args.number_of_attackers)
             data['attacker_list'] = attacker_list
             data['eps'] = args.eps
@@ -713,7 +714,7 @@ def main(args):
             # Detach and clone perturbations from Pytorch computation graph, in case of gradient misuse.
             pert = pert.detach().clone()
             # Apply the final perturbation to attackers' feature maps.
-            data['pert'] = pert.to(device)
+            data['pert'] = pert.to(device) 
             print_and_write_log("Perturbation is applied on agent {}".format(attacker_list))
             if args.visualization:
                 # visualize attacked result
@@ -724,7 +725,7 @@ def main(args):
                 data['pert'] = pert.to(device)
                 data['no_fuse'] = False
                 loss, cls_loss, loc_loss, result = fafmodule.predict_all(data, 1, num_agent=num_agent, adv_method=args.adv_method)
-                det_results_local, annotations_local = local_eval(num_agent, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result, config, det_results_local, annotations_local)
+                # det_results_local, annotations_local = local_eval(num_agent, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result, config, det_results_local, annotations_local)
                 continue
             
 
@@ -1154,7 +1155,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-d",
         "--data",
-        default="/data2/user2/senkang/CP-GuardBench/V2X-Sim-det/train/",
+        default="/data2/user2/senkang/CP-GuardBench/V2X-Sim-det/test/",
         type=str,
         help="The path to the preprocessed sparse BEV training data",
     )
@@ -1253,7 +1254,7 @@ if __name__ == "__main__":
     parser.add_argument('--adv_iter', type=int, default=15, help='adv iterations of computing perturbation')
 
     # Scene and frame settings
-    parser.add_argument('--scene_id', type=list, default=[5], help='target evaluation scene') #Scene 8, 96, 97 has 6 agents.
+    parser.add_argument('--scene_id', type=list, default=[8,29,91,92], help='target evaluation scene') #Scene 8, 96, 97 has 6 agents.
     parser.add_argument('--sample_id', type=int, default=None, help='target evaluation sample')
     
     # Among Us modes and parameters

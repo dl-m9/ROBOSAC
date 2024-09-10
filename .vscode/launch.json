@@ -14,12 +14,12 @@
             "args": [
                 "--log", 
                 "--robosac", "no_defense",
-                "--adv_method", "fgsm",
-                "--visualization",
+                "--adv_method", "cw-l2",
+                // "--visualization",
                 // "--no_cross_road",
-                // "--random_attack"
-                "--number_of_attackers", "2",
                 "--random_attack",
+                "--number_of_attackers", "1",
+                // "--random_attack",
                 
             ],
             // "cwd": "/data2/user2/senkang/CP-GuardBench/coperception/tools/det/",

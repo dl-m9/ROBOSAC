@@ -11,13 +11,19 @@ from tqdm import tqdm
 import time
 from sklearn.metrics import precision_score, recall_score, f1_score
 from models import ResNetBinaryClassifier, detector
+import matplotlib.pyplot as plt
+import numpy as np
+import torch.nn.init as init
+from pytorch_metric_learning import losses
+
+
 
 class CPGuardDataset(Dataset):
 
     def __init__(self, data_dir, if_residual=True):
         self.data_dir = data_dir
         self.if_residual = if_residual
-        self.data_dir_list = [os.path.join(self.data_dir, file) for file in os.listdir(self.data_dir)]
+        self.data_dir_list = [os.path.join(self.data_dir, file) for file in os.listdir(self.data_dir) if file.endswith('.pkl')]
 
     
     def __len__(self):
@@ -33,17 +39,20 @@ class CPGuardDataset(Dataset):
 
 
         zero_tensor = torch.zeros(256, 32, 32).to('cuda')
-
-
+        # for k, v in raw_data.items(): # 过滤掉所有值为0的元素
+        #     if torch.equal(v[0], zero_tensor):
         if self.if_residual:
             residual_latent_feature = []
             ego_latent_feature = raw_data[1][0]
             for k, v in raw_data.items():
                 if not torch.equal(v[0], zero_tensor) and k != 1:  # k == 1: ego agent
-                    residual_latent_feature.append(
-                        [ego_latent_feature - v[0], v[1]]
-                    )
-            return residual_latent_feature
+                    residual = ego_latent_feature - v[0]
+                    # Normalize the residual
+                    residual_norm = (residual - residual.mean()) / (residual.std() + 1e-8)
+                    residual_latent_feature.append([residual_norm, v[1]])
+
+
+            return residual_latent_feature, current_file.split('/')[-1]
         else:
             latent_feature = []
             for k, v in raw_data.items():
@@ -51,19 +60,18 @@ class CPGuardDataset(Dataset):
                     latent_feature.append(
                         [v[0], v[1]]
                     )
-            return latent_feature
+            return latent_feature, current_file.split('/')[-1]
 
-
-import torch
-import torch.nn as nn
 
 # define the CNN
 
 
 
+
+
+
     
 
-import torch.nn.init as init
 
 def init_weights(m):
     if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
@@ -72,19 +80,34 @@ def init_weights(m):
             init.constant_(m.bias, 0)
 
 if __name__ == '__main__':
-    data_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/train'
-    train_dataset = CPGuardDataset(data_dir)
-    train_dataloader = DataLoader(train_dataset, batch_size=1, shuffle=True)
+
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Training configuration')
+    parser.add_argument('--batch_size', type=int, default=10, help='Batch size (do not change this)')
+    parser.add_argument('--num_epochs', type=int, default=100, help='Number of epochs')
+    parser.add_argument('--resume', action='store_true', help='Resume training from checkpoint')
+
+    args = parser.parse_args()
+
+    batch_size = args.batch_size
+    num_epochs = args.num_epochs
+    training = True
+    resume = args.resume
+    if_residual = False
+    if_cont_training = False
+
+
+    data_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/generated'
+    train_dataset = CPGuardDataset(data_dir, if_residual=if_residual)
+    train_dataloader = DataLoader(train_dataset, batch_size=1, shuffle=False)
 
     eval_data_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/test'
-    eval_dataset = CPGuardDataset(eval_data_dir)
-    eval_dataloader = DataLoader(eval_dataset, batch_size=1, shuffle=True)
+    eval_dataset = CPGuardDataset(eval_data_dir, if_residual=if_residual)
+    eval_dataloader = DataLoader(eval_dataset, batch_size=1, shuffle=False)
 
     
-    batch_size = 1 # do not change this 
-    num_epochs = 300
-    training = True
-    resume = True
+    
 
 
     if training:
@@ -92,12 +115,12 @@ if __name__ == '__main__':
         writer = SummaryWriter()
 
         model = ResNetBinaryClassifier().to('cuda')
-        # model.apply(init_weights).to('cuda')
+        cont_loss = losses.NTXentLoss()
 
         start_epoch = 0
         if resume:
             # Load the latest pretrained weights
-            log_dir = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/resnet50-te2024-09-02-20-32-18'
+            log_dir = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/2024-09-07-19-18-38'
             pth_files = [f for f in os.listdir(log_dir) if f.endswith('.pth')]
             latest_pth = max(pth_files, key=lambda x: int(x.split('.')[0]))
             pretrained_weights_path = os.path.join(log_dir, latest_pth)
@@ -106,7 +129,7 @@ if __name__ == '__main__':
             start_epoch = int(latest_pth.split('.')[0]) + 1  # Start from the next epoch
 
         criterion = nn.BCELoss()
-        optimizer = torch.optim.SGD(model.parameters(), lr=0.001)
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.001, weight_decay=1e-4)
 
         # config log path
         if not resume:
@@ -119,29 +142,60 @@ if __name__ == '__main__':
             model.train()
             total_loss = 0.0
             with tqdm(total=len(train_dataloader)) as pbar:
-                for i, data in tqdm(enumerate(train_dataloader)):
+                batch_data = []
+                batch_label = [] 
+                for i, (data, file_name) in tqdm(enumerate(train_dataloader)):
+                    # residual_latent_feature_list = []
+                    # label_list = []
+                    # for j in range(batch_size):
+                    #     residual_latent_feature_list.extend(data[0])
+                    #     label_list.extend(data[1])
 
-                    optimizer.zero_grad()
+                    # optimizer.zero_grad()
+                    # if file_name[0] != '92_0.pkl': continue
+                    if len(data) == 0: continue
 
-                    residual_latent_feature_list = torch.stack([item[0] for item in data]).squeeze().to('cuda')
-                    label_list = torch.tensor([item[1] for item in data], dtype=torch.float).to('cuda')
+                    
+                    
+                    residual_latent_feature_list = torch.cat([item[0] for item in data]).to('cuda')
+                    
+                    # Check if residual_latent_feature_list is 4D, if not, add a dimension
+                    # if residual_latent_feature_list.dim() != 4:
+                    #     residual_latent_feature_list = residual_latent_feature_list.unsqueeze(0)
+                    labels = torch.cat([item[1].to(dtype=torch.float, device='cuda') for item in data], dim=0)
 
-                    outputs = model(residual_latent_feature_list).squeeze()
-                    # for output in outputs:
-                    loss = criterion(outputs, label_list)
-                    loss.backward()
-                    optimizer.step()
-                    
-                    total_loss += loss.item()
-                    
-                    # Progress bar
-                    pbar.set_postfix(Epoch=f'{epoch+1}/{num_epochs}', loss=f'{loss.item():.4f}')
-                    pbar.update(1)
-                    
-                    # Log loss to TensorBoard
-                    writer.add_scalar('Loss/train', loss.item(), epoch * len(train_dataloader) + i)
+                    batch_data.append(residual_latent_feature_list)
+                    batch_label.append(labels)
+
+                    if (i + 1) % batch_size == 0 or i == len(train_dataloader) - 1:
+                        residual_latent_feature_list = torch.cat(batch_data, dim=0)
+                        labels = torch.cat(batch_label, dim=0)
+
+                        optimizer.zero_grad()
+
+                        outputs, embeddings = model(residual_latent_feature_list)
+                        outputs = outputs.squeeze()
+                        loss = criterion(outputs, labels)
+                        if if_cont_training:
+                            cont_loss_value = cont_loss(embeddings, labels)
+                            loss = loss + cont_loss_value * 0.1
+
+                        loss.backward()
+                        optimizer.step()
+                        
+                        total_loss += loss.item()
+                        
+                        # Progress bar
+                        pbar.set_postfix(Epoch=f'{epoch+1}/{num_epochs}', loss=f'{loss.item():.4f}')
+                        pbar.update(1)
+                        
+                        # Log loss to TensorBoard
+                        writer.add_scalar('Loss/train', loss.item(), epoch * len(train_dataloader) + i)
+
+                        batch_data = []
+                        batch_label = []
             
-            avg_loss = total_loss / len(train_dataloader)
+            avg_loss = total_loss / (len(train_dataloader) / batch_size)
             print(f'Average Loss for Epoch {epoch+1}: {avg_loss:.4f}')
             torch.save(model.state_dict(), f'{log_dir}/{epoch}.pth')
             
@@ -162,11 +216,12 @@ if __name__ == '__main__':
 
             with torch.no_grad():
                 with tqdm(total=len(eval_dataloader), desc="Evaluating") as pbar:  # Changed train_dataloader to eval_dataloader
-                    for data in eval_dataloader:  # Changed train_dataloader to eval_dataloader
+                    for (data, file_name) in eval_dataloader:  # Changed train_dataloader to eval_dataloader
                         residual_latent_feature_list = torch.stack([item[0] for item in data]).squeeze().to('cuda')
                         label_list = torch.tensor([item[1] for item in data], dtype=torch.float).to('cuda')
 
-                        outputs = model(residual_latent_feature_list).squeeze()
+                        outputs, _ = model(residual_latent_feature_list)
+                        outputs = outputs.squeeze() 
                         loss = criterion(outputs, label_list)
                         eval_loss += loss.item()
 

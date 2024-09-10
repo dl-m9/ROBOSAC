@@ -508,8 +508,9 @@ class FaFModule(object):
                     outputs = x
                     one_hot_labels = labels
                     i, _ = torch.max((1-one_hot_labels)*outputs, dim=1)
-                    j = torch.masked_select(outputs, one_hot_labels.byte())
-                    print("j.shape:", j.shape)
+                    # j = torch.masked_select(outputs, one_hot_labels.byte())
+                    j = torch.sum(one_hot_labels*outputs, dim=1)
+                    # print("j.shape:", j.shape)
                     return torch.clamp(j-i, min=-kappa)
 
                 a = 1/2*(nn.Tanh()(result) + 1)
@@ -613,6 +614,7 @@ class FaFModule(object):
         
         self.optimizer.zero_grad()
         # loss_cls.backward()
+        loss_cls = loss_cls.requires_grad_(True)
         loss_cls.backward(retain_graph=True)
         self.optimizer.step()
             

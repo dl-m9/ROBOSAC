@@ -102,6 +102,7 @@ class FusionBase(IntermediateModelBase):
                         self.attacked_feature_dict[i] = [self.tg_agent, 'ego']
                         # TODO:save attacked_feature_dict
                         # scene + frame + attack_name 
+                        
                         if current_file_name:
                             save_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/generated/'
                             os.makedirs(save_dir, exist_ok=True)
@@ -122,7 +123,12 @@ class FusionBase(IntermediateModelBase):
                                 plt.colorbar()
                                 plt.title(f'Agent {agent_id} ({agent_type}) Feature Map')
                                 
-                                agent_postfix = 'adv_method' if agent_type == 1 else 'normal'
+                                if agent_type == 'ego':
+                                    agent_postfix = 'ego'
+                                elif agent_type == 1:
+                                    agent_postfix = adv_method
+                                else:
+                                    agent_postfix = 'normal'
                                 # Save the figure without displaying
                                 save_path = os.path.join(save_dir, f'{file_name}_agent{agent_id}_{agent_postfix}.png')
                                 plt.savefig(save_path)

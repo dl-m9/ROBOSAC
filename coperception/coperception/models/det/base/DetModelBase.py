@@ -214,12 +214,17 @@ class DetModelBase(nn.Module):
                         trans_matrices,
                     )
                 if_j_attacked = 0
+                original_warp_feat = warp_feat
+                
                 if pert is not None and j in attacker_list:
                     # clip
-                    # eta = torch.clamp(pert[j], min=-eps, max=eps)
+                    eta = torch.clamp(pert[j], min=-eps, max=eps)
                     # Apply perturbation
-                    warp_feat = warp_feat + pert[j]
+                    
+                    warp_feat = warp_feat + eta
                     if_j_attacked = 1
+                
+                
                 
                 if collab_agent_list is not None:
                     # only fuse with collab agent and trial agent
@@ -227,8 +232,13 @@ class DetModelBase(nn.Module):
                         continue
                     
                 self.neighbor_feat_list.append(warp_feat) # don't include the ego, just neighbors' aligned features
-                if not torch.equal(warp_feat, torch.zeros(256, 32,32).to('cuda')):
-                    self.attacked_feature_dict[j] = [warp_feat, if_j_attacked]
+                # if not torch.equal(warp_feat, torch.zeros(256, 32,32).to('cuda')):
+
+
+                if torch.equal(original_warp_feat, torch.zeros(256, 32,32).to('cuda')):
+                    warp_feat = torch.zeros(256, 32,32).to('cuda')
+                    if_j_attacked = 0
+                self.attacked_feature_dict[j] = [warp_feat, if_j_attacked]
 
 
 

@@ -13,9 +13,19 @@ class ResNetBinaryClassifier(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        x = self.resnet(x)
+        x = self.resnet.conv1(x)
+        x = self.resnet.bn1(x)
+        x = self.resnet.relu(x)
+        x = self.resnet.maxpool(x)
+        x = self.resnet.layer1(x)
+        x = self.resnet.layer2(x)
+        x = self.resnet.layer3(x)
+        x = self.resnet.layer4(x)
+        x = self.resnet.avgpool(x)
+        features = torch.flatten(x, 1)
+        x = self.resnet.fc(features)
         x = self.sigmoid(x)
-        return x
+        return x, features
 
 
 
@@ -79,3 +89,10 @@ class detector(nn.Module):
         out1 = out1.reshape(out1.shape[0], -1)
         output = self.fc_part(out1)
         return output
+    
+
+
+
+if __name__ == '__main__':
+    model = ResNetBinaryClassifier()
+    print(model)

@@ -7,12 +7,12 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 from models import ResNetBinaryClassifier
 
 def test_model():
-    eval_data_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/train'
+    eval_data_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/test'
     eval_dataset = CPGuardDataset(eval_data_dir)
     eval_dataloader = DataLoader(eval_dataset, batch_size=1, shuffle=True)
 
     model = ResNetBinaryClassifier().to('cuda')
-    pretrained_weights_path = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/resnet50-2024-09-02-20-32-18/299.pth'
+    pretrained_weights_path = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/2024-09-07-19-18-38/95.pth'
     model.load_state_dict(torch.load(pretrained_weights_path))
     model.to('cuda')
     model.eval()
@@ -26,15 +26,16 @@ def test_model():
     all_predictions = []
 
     with torch.no_grad():
-        for i, data in enumerate(eval_dataloader):
+        for i, (data, file_name) in enumerate(eval_dataloader):
             residual_latent_feature_list = torch.stack([item[0] for item in data]).squeeze().to('cuda')
             label_list = torch.tensor([item[1] for item in data], dtype=torch.float).to('cuda')
 
-            outputs = model(residual_latent_feature_list).squeeze()
+            outputs, _ = model(residual_latent_feature_list)
+            outputs = outputs.squeeze() 
             loss = criterion(outputs, label_list)
             eval_loss += loss.item()
 
-            predicted = (outputs > 0.01).float()
+            predicted = (outputs > .5).float()
             correct_predictions += (predicted == label_list).sum().item()
             # print(i, correct_predictions)
             total_predictions += label_list.size(0)
