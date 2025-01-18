@@ -24,7 +24,7 @@ class FusionBase(IntermediateModelBase):
             "Please implement this method for specific fusion strategies"
         )
 
-    def forward(self, bevs, trans_matrices, num_agent_tensor, batch_size=1, pert=None, eps=None, attacker_list=None, ego_agent=None, unadv_pert=None, kick=False, no_fuse=False, collab_agent_list=None, trial_agent_id=None, current_file_name=None, adv_method=None):
+    def forward(self, bevs, trans_matrices, num_agent_tensor, batch_size=1, pert=None, eps=None, attacker_list=None, ego_agent=None, unadv_pert=None, kick=False, no_fuse=False, collab_agent_list=None, trial_agent_id=None, current_file_name=None, adv_method=None, cp_guard_defense=False):
 
         bevs = bevs.permute(0, 1, 4, 2, 3)  # (Batch, seq, z, h, w)
         encoded_layers = self.u_encoder(bevs)
@@ -97,14 +97,18 @@ class FusionBase(IntermediateModelBase):
                             trial_agent_id,
                             pert,
                             attacker_list,
-                            eps
+                            eps,
+                            adv_method
                         )
                         self.attacked_feature_dict[i] = [self.tg_agent, 'ego']
+
                         # TODO:save attacked_feature_dict
                         # scene + frame + attack_name 
                         
-                        if current_file_name:
-                            save_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/generated/'
+                        # 以下是保存attacked_feature_dict的代码
+                        save_dict = False
+                        if current_file_name and save_dict: 
+                            save_dir = f'/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/generated2/'
                             os.makedirs(save_dir, exist_ok=True)
                             
                             file_name = current_file_name[0][0].split('/')[-2]
@@ -112,7 +116,7 @@ class FusionBase(IntermediateModelBase):
                                 pickle.dump(self.attacked_feature_dict, f)
                             print(f"Attacked feature dict saved to {os.path.join(save_dir, file_name)}.pkl")
 
-
+                            # 以下是保存可视化feature的代码
                             for agent_id, (feature_map, agent_type) in self.attacked_feature_dict.items():
                                 # Average across channels
                                 avg_feature = feature_map.mean(dim=0).cpu().numpy()
@@ -125,7 +129,7 @@ class FusionBase(IntermediateModelBase):
                                 
                                 if agent_type == 'ego':
                                     agent_postfix = 'ego'
-                                elif agent_type == 1:
+                                elif agent_type in ['pgd', 'bim', 'cw-l2', 'GN', 'fgsm']:
                                     agent_postfix = adv_method
                                 else:
                                     agent_postfix = 'normal'
@@ -154,7 +158,7 @@ class FusionBase(IntermediateModelBase):
 
 
                     # feature update
-                    local_com_mat_update[b, i] = self.fusion()   # 最终每个 agent 以其自身为 ego 的特征融合结果
+                    local_com_mat_update[b, i] = self.fusion(cp_guard_defense)   # 最终每个 agent 以其自身为 ego 的特征融合结果
             
             # weighted feature maps is passed to decoder
             feat_fuse_mat = super().agents_to_batch(local_com_mat_update)

@@ -430,7 +430,7 @@ def main(args):
 
 
 
-    assert args.robosac in ["upperbound", "lowerbound", "no_defense", "robosac_validation", "robosac_mAP", "adaptive", "fix_attackers", "performance_eval", "probing"]
+    assert args.robosac in ["upperbound", "lowerbound", "no_defense", "robosac_validation", "robosac_mAP", "adaptive", "fix_attackers", "performance_eval", "probing", "cp-guard"]
 
 
 
@@ -725,292 +725,300 @@ def main(args):
                 data['pert'] = pert.to(device)
                 data['no_fuse'] = False
                 loss, cls_loss, loc_loss, result = fafmodule.predict_all(data, 1, num_agent=num_agent, adv_method=args.adv_method)
-                # det_results_local, annotations_local = local_eval(num_agent, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result, config, det_results_local, annotations_local)
+                det_results_local, annotations_local = local_eval(num_agent, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result, config, det_results_local, annotations_local)
                 continue
-            
-
-            if args.use_history_frame == True:
-                # use history frame to save one forward pass
-                if int(idx) == 0:
-                    # first frame, use current ego only result as reference result
-                    print_and_write_log("first frame, use current ego only result as reference result")
-                    data['pert'] = None
-                    data['collab_agent_list'] = None
-                    data['no_fuse'] = True
-                    _, _, _, result_reference = fafmodule.predict_all(data, 1, num_agent=num_agent)
-                    ego_steps[frame_seq-1] = 1
-                # if not first frame, keep no-op since we use history frame and it will be updated at the end of the iteration
-            else:
-                # if not use history frame, use current frame as reference frame
-                # Get the original(ego_only) prediction
-                print_and_write_log("performing calculating ego only result...")
-                data['pert'] = None
-                data['collab_agent_list'] = None
-                data['no_fuse'] = True
-                _, _, _, result_reference = fafmodule.predict_all(data, 1, num_agent=num_agent)
 
 
-            if args.robosac == 'fix_attackers':
-                # Assume attacker_list is fixed and always attacking in the scene, then after reached consensus, omit sampling process
-                num_sensor = num_agent_list[0][0]
-                ego_idx = args.ego_agent
-                all_agent_list = [i for i in range(num_sensor)]
-                # We always trust ourself
-                all_agent_list.remove(ego_idx)
-                # Not including ego agent, since ego agent is always used.
+            if args.robosac == 'cp-guard':
+                # attacker is always attacking and no defense is applied
+                data['pert'] = pert.to(device)
+                data['no_fuse'] = False
+                loss, cls_loss, loc_loss, result = fafmodule.predict_all(data, 1, num_agent=num_agent, adv_method=args.adv_method, cp_guard_defense=True)
+                det_results_local, annotations_local = local_eval(num_agent, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result, config, det_results_local, annotations_local)
+                continue
+
+            # if args.use_history_frame == True:
+            #     # use history frame to save one forward pass
+            #     if int(idx) == 0:
+            #         # first frame, use current ego only result as reference result
+            #         print_and_write_log("first frame, use current ego only result as reference result")
+            #         data['pert'] = None
+            #         data['collab_agent_list'] = None
+            #         data['no_fuse'] = True
+            #         _, _, _, result_reference = fafmodule.predict_all(data, 1, num_agent=num_agent)
+            #         ego_steps[frame_seq-1] = 1
+            #     # if not first frame, keep no-op since we use history frame and it will be updated at the end of the iteration
+            # else:
+            #     # if not use history frame, use current frame as reference frame
+            #     # Get the original(ego_only) prediction
+            #     print_and_write_log("performing calculating ego only result...")
+            #     data['pert'] = None
+            #     data['collab_agent_list'] = None
+            #     data['no_fuse'] = True
+            #     _, _, _, result_reference = fafmodule.predict_all(data, 1, num_agent=num_agent)
+
+
+            # if args.robosac == 'fix_attackers':
+            #     # Assume attacker_list is fixed and always attacking in the scene, then after reached consensus, omit sampling process
+            #     num_sensor = num_agent_list[0][0]
+            #     ego_idx = args.ego_agent
+            #     all_agent_list = [i for i in range(num_sensor)]
+            #     # We always trust ourself
+            #     all_agent_list.remove(ego_idx)
+            #     # Not including ego agent, since ego agent is always used.
                 
-                if fix_attackers_collab_agent_list == []:
-                    # if consensus is not reached, keep sampling attackers
-                    collab_agent_list = []
-                    if args.robosac_k == None:
-                        consensus_set_size = cal_robosac_consensus(
-                            num_agent, args.step_budget, args.number_of_attackers)
+            #     if fix_attackers_collab_agent_list == []:
+            #         # if consensus is not reached, keep sampling attackers
+            #         collab_agent_list = []
+            #         if args.robosac_k == None:
+            #             consensus_set_size = cal_robosac_consensus(
+            #                 num_agent, args.step_budget, args.number_of_attackers)
 
-                        print_and_write_log("\nStep Budget {}, Calculated Consensus Set Size {}:".format(
-                            args.step_budget, consensus_set_size))
+            #             print_and_write_log("\nStep Budget {}, Calculated Consensus Set Size {}:".format(
+            #                 args.step_budget, consensus_set_size))
 
-                        if(consensus_set_size < 1):
-                            print_and_write_log(
-                                'Expected Consensus Agent below 1. Exit.'.format(consensus_set_size))
-                            sys.exit()
-                    found = False
-                    # NOTE: 1~step_budget-1
-                    for step in range(1, args.step_budget + 1):
-                        # NOTE: random.choices will sample an agent more than once. eg.: [2, 3, 2]
-                        # So we should use random.sample(population, k) to avoid this.
-                        # collab_agent_list = random.sample(all_agent_list, k=args.robosac_k)
-                        fix_attackers_total_step += 1
-                        print_and_write_log("\nScene {}, Frame {}, Step {}, Step Budget {}:".format(
-                        seq_name, idx, step, args.step_budget))
+            #             if(consensus_set_size < 1):
+            #                 print_and_write_log(
+            #                     'Expected Consensus Agent below 1. Exit.'.format(consensus_set_size))
+            #                 sys.exit()
+            #         found = False
+            #         # NOTE: 1~step_budget-1
+            #         for step in range(1, args.step_budget + 1):
+            #             # NOTE: random.choices will sample an agent more than once. eg.: [2, 3, 2]
+            #             # So we should use random.sample(population, k) to avoid this.
+            #             # collab_agent_list = random.sample(all_agent_list, k=args.robosac_k)
+            #             fix_attackers_total_step += 1
+            #             print_and_write_log("\nScene {}, Frame {}, Step {}, Step Budget {}:".format(
+            #             seq_name, idx, step, args.step_budget))
 
-                        if args.robosac_k == None:
-                            collab_agent_list = random.sample(
-                                all_agent_list, k=consensus_set_size)
-                        else:
-                            collab_agent_list = random.sample(
-                                all_agent_list, k=args.robosac_k)
-                        data['collab_agent_list'] = collab_agent_list
-                        data['no_fuse'] = False
-                        data['pert'] = pert.to(device)
+            #             if args.robosac_k == None:
+            #                 collab_agent_list = random.sample(
+            #                     all_agent_list, k=consensus_set_size)
+            #             else:
+            #                 collab_agent_list = random.sample(
+            #                     all_agent_list, k=args.robosac_k)
+            #             data['collab_agent_list'] = collab_agent_list
+            #             data['no_fuse'] = False
+            #             data['pert'] = pert.to(device)
 
-                        loss, cls_loss, loc_loss, result = fafmodule.predict_all(
-                            data, 1, num_agent=num_agent)
+            #             loss, cls_loss, loc_loss, result = fafmodule.predict_all(
+            #                 data, 1, num_agent=num_agent)
 
-                        # We use jaccard index to define the difference between two bbox sets
-                        jac_index = get_jaccard_index(
-                            config, num_agent_list, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result_reference, result)
-                        print_and_write_log(
-                            "Jaccard Coefficient: {}".format(jac_index))
-                        if jac_index < args.box_matching_thresh:
-                            print_and_write_log(
-                                'Attacker(s) is(are) among {}'.format(collab_agent_list))
-                        else:
-                            sus_agent_list = [
-                                i for i in all_agent_list if i not in collab_agent_list]
-                            print_and_write_log('Achieved consensus at step {}, with agents {}. Attacker(s) is(are) among {}, excluded'.format(
-                                step, collab_agent_list, sus_agent_list))
-                            print_and_write_log('Now begin to keep collaborating with agents {}'.format(collab_agent_list))
+            #             # We use jaccard index to define the difference between two bbox sets
+            #             jac_index = get_jaccard_index(
+            #                 config, num_agent_list, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result_reference, result)
+            #             print_and_write_log(
+            #                 "Jaccard Coefficient: {}".format(jac_index))
+            #             if jac_index < args.box_matching_thresh:
+            #                 print_and_write_log(
+            #                     'Attacker(s) is(are) among {}'.format(collab_agent_list))
+            #             else:
+            #                 sus_agent_list = [
+            #                     i for i in all_agent_list if i not in collab_agent_list]
+            #                 print_and_write_log('Achieved consensus at step {}, with agents {}. Attacker(s) is(are) among {}, excluded'.format(
+            #                     step, collab_agent_list, sus_agent_list))
+            #                 print_and_write_log('Now begin to keep collaborating with agents {}'.format(collab_agent_list))
                             
-                            found = True
-                            # reached consensus, break
-                            fix_attackers_collab_agent_list = collab_agent_list
-                            steps[frame_seq - 1] = step
-                            succ += 1
+            #                 found = True
+            #                 # reached consensus, break
+            #                 fix_attackers_collab_agent_list = collab_agent_list
+            #                 steps[frame_seq - 1] = step
+            #                 succ += 1
                             
-                            break
+            #                 break
 
-                    if not found:
-                        print_and_write_log('No consensus!')
-                        # Can't achieve consensus, so fall back to original ego only result
-                        data['pert'] = None
-                        data['collab_agent_list'] = None
-                        data['no_fuse'] = True
-                        _, _, _, result_self_only = fafmodule.predict_all(
-                            data, 1, num_agent=num_agent)
-                        result = result_self_only
-                        steps[frame_seq - 1] = args.step_budget
-                        fail += 1
+            #         if not found:
+            #             print_and_write_log('No consensus!')
+            #             # Can't achieve consensus, so fall back to original ego only result
+            #             data['pert'] = None
+            #             data['collab_agent_list'] = None
+            #             data['no_fuse'] = True
+            #             _, _, _, result_self_only = fafmodule.predict_all(
+            #                 data, 1, num_agent=num_agent)
+            #             result = result_self_only
+            #             steps[frame_seq - 1] = args.step_budget
+            #             fail += 1
 
-                    if args.use_history_frame == True:
-                        # update reference frame for next iteration
-                        print_and_write_log("update frame {} result as reference frame result for the next frame".format(idx))
-                        result_reference = result
-                    else:
-                        ego_steps[frame_seq - 1] = 1
-                else: 
-                    print_and_write_log("\nfound consensus, use fixed collaborator:{}".format(fix_attackers_collab_agent_list))
-                    # found consensus, use fixed collaborator
-                    data['collab_agent_list'] = fix_attackers_collab_agent_list
-                    data['no_fuse'] = False
-                    data['pert'] = pert.to(device)
-                    steps[frame_seq - 1] = 1
-                    loss, cls_loss, loc_loss, result = fafmodule.predict_all(
-                        data, 1, num_agent=num_agent)
-                    if args.visualization:
-                        # visualize consensus result
-                        visualize(config, filename0, save_fig_path, fafmodule, data,
-                                num_agent_list, padded_voxel_points, gt_max_iou, vis_tag='consensus')
+            #         if args.use_history_frame == True:
+            #             # update reference frame for next iteration
+            #             print_and_write_log("update frame {} result as reference frame result for the next frame".format(idx))
+            #             result_reference = result
+            #         else:
+            #             ego_steps[frame_seq - 1] = 1
+            #     else: 
+            #         print_and_write_log("\nfound consensus, use fixed collaborator:{}".format(fix_attackers_collab_agent_list))
+            #         # found consensus, use fixed collaborator
+            #         data['collab_agent_list'] = fix_attackers_collab_agent_list
+            #         data['no_fuse'] = False
+            #         data['pert'] = pert.to(device)
+            #         steps[frame_seq - 1] = 1
+            #         loss, cls_loss, loc_loss, result = fafmodule.predict_all(
+            #             data, 1, num_agent=num_agent)
+            #         if args.visualization:
+            #             # visualize consensus result
+            #             visualize(config, filename0, save_fig_path, fafmodule, data,
+            #                     num_agent_list, padded_voxel_points, gt_max_iou, vis_tag='consensus')
                     
 
-                # save the step num for current frame, Then calculate mean steps over the scene.
+            #     # save the step num for current frame, Then calculate mean steps over the scene.
 
-                det_results_local, annotations_local = local_eval(
-                    num_agent, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result, config, det_results_local, annotations_local)
+            #     det_results_local, annotations_local = local_eval(
+            #         num_agent, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result, config, det_results_local, annotations_local)
 
 
 
-            if args.robosac == "probing" :
+            # if args.robosac == "probing" :
                 
-                step = 0
-                succ_result = None
-                succ_probing_consensus_size = 0
+            #     step = 0
+            #     succ_result = None
+            #     succ_probing_consensus_size = 0
 
-                #TODO: set 5 to a variable
-                assert args.step_budget >= 5 #ensuring probing tries will traverse all possible attacker ratios
+            #     #TODO: set 5 to a variable
+            #     assert args.step_budget >= 5 #ensuring probing tries will traverse all possible attacker ratios
 
 
 
-                while step < args.step_budget and NTry < NMax:
-                    # for consensus_set_size in consensus_tries:
-                    #     # probe attackers
-                    #     temp_num_attackers = (5-consensus_set_size)
-                    #     temp_attacker_ratio = temp_num_attackers / 5
-                    for i in range(len(estimate_attacker_ratio)):
-                        temp_attacker_ratio = estimate_attacker_ratio[i]
-                        consensus_set_size = round(5*(1-temp_attacker_ratio))
-                        if NTry[i] < NMax[i]:
-                            print_and_write_log("Probing {} agents for consensus".format(consensus_set_size))
-                            step += 1
-                            total_sampling_step += 1
-                            # probing_step_tried_by_consensus_set_size[consensus_set_size] += 1
-                            # step budget available for probing
-                            # try to probe attacker ratio
-                            collab_agent_list = random.sample(
-                            all_agent_list, k=consensus_set_size)
-                            data['collab_agent_list'] = collab_agent_list
-                            data['no_fuse'] = False
-                            data['pert'] = pert.to(device)
+            #     while step < args.step_budget and NTry < NMax:
+            #         # for consensus_set_size in consensus_tries:
+            #         #     # probe attackers
+            #         #     temp_num_attackers = (5-consensus_set_size)
+            #         #     temp_attacker_ratio = temp_num_attackers / 5
+            #         for i in range(len(estimate_attacker_ratio)):
+            #             temp_attacker_ratio = estimate_attacker_ratio[i]
+            #             consensus_set_size = round(5*(1-temp_attacker_ratio))
+            #             if NTry[i] < NMax[i]:
+            #                 print_and_write_log("Probing {} agents for consensus".format(consensus_set_size))
+            #                 step += 1
+            #                 total_sampling_step += 1
+            #                 # probing_step_tried_by_consensus_set_size[consensus_set_size] += 1
+            #                 # step budget available for probing
+            #                 # try to probe attacker ratio
+            #                 collab_agent_list = random.sample(
+            #                 all_agent_list, k=consensus_set_size)
+            #                 data['collab_agent_list'] = collab_agent_list
+            #                 data['no_fuse'] = False
+            #                 data['pert'] = pert.to(device)
 
-                            loss, cls_loss, loc_loss, result = fafmodule.predict_all(
-                                data, 1, num_agent=num_agent)
+            #                 loss, cls_loss, loc_loss, result = fafmodule.predict_all(
+            #                     data, 1, num_agent=num_agent)
                             
-                            # We use jaccard index to define the difference between two bbox sets
-                            jac_index = get_jaccard_index(
-                                config, num_agent_list, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result_reference, result)
-                            print_and_write_log(
-                                "Jaccard Coefficient: {}".format(jac_index))
+            #                 # We use jaccard index to define the difference between two bbox sets
+            #                 jac_index = get_jaccard_index(
+            #                     config, num_agent_list, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result_reference, result)
+            #                 print_and_write_log(
+            #                     "Jaccard Coefficient: {}".format(jac_index))
 
-                            if jac_index < args.box_matching_thresh:
-                                # fail to reach consensus
-                                print_and_write_log('No consensus reached when probing {} consensus agents. Current step is {} in Frame {}.'.format(consensus_set_size,step,idx))
-                                print_and_write_log('Attacker(s) is(are) among {}'.format(collab_agent_list))
+            #                 if jac_index < args.box_matching_thresh:
+            #                     # fail to reach consensus
+            #                     print_and_write_log('No consensus reached when probing {} consensus agents. Current step is {} in Frame {}.'.format(consensus_set_size,step,idx))
+            #                     print_and_write_log('Attacker(s) is(are) among {}'.format(collab_agent_list))
 
-                                NTry[i] += 1 
+            #                     NTry[i] += 1 
                                 
-                                # if temp_num_attackers == 0:
-                                #     # Assumption of no attackers fails
-                                #     consensus_tries_is_needed[i] = 0
+            #                     # if temp_num_attackers == 0:
+            #                     #     # Assumption of no attackers fails
+            #                     #     consensus_tries_is_needed[i] = 0
 
-                                if NTry[i] == NMax[i]:
-                                    print_and_write_log("Probing of {} agents for consensus has reached its sampling limit {} with assumed attacker ratio {} and consensus set size {}.".format(consensus_set_size, NMax[i], temp_attacker_ratio, consensus_set_size))
-                                    print_and_write_log("From now on we won't try to probe {} agents consensus since it seems unlikely to reach that.".format(consensus_set_size))
-                            else:
-                                # succeed to reach consensus
-                                sus_agent_list = [
-                                    i for i in all_agent_list if i not in collab_agent_list]
-                                print_and_write_log('Achieved consensus at step {} in Frame{}, with {} agents: {}. Using the result as temporal final output of this frame, and skipping smaller consensus set tries. \n Attacker(s) is(are) among {}, excluded.'.format(
-                                    step, idx, consensus_set_size, collab_agent_list, sus_agent_list))
+            #                     if NTry[i] == NMax[i]:
+            #                         print_and_write_log("Probing of {} agents for consensus has reached its sampling limit {} with assumed attacker ratio {} and consensus set size {}.".format(consensus_set_size, NMax[i], temp_attacker_ratio, consensus_set_size))
+            #                         print_and_write_log("From now on we won't try to probe {} agents consensus since it seems unlikely to reach that.".format(consensus_set_size))
+            #                 else:
+            #                     # succeed to reach consensus
+            #                     sus_agent_list = [
+            #                         i for i in all_agent_list if i not in collab_agent_list]
+            #                     print_and_write_log('Achieved consensus at step {} in Frame{}, with {} agents: {}. Using the result as temporal final output of this frame, and skipping smaller consensus set tries. \n Attacker(s) is(are) among {}, excluded.'.format(
+            #                         step, idx, consensus_set_size, collab_agent_list, sus_agent_list))
                                 
-                                succ_result = result
-                                succ_probing_consensus_size = consensus_set_size
+            #                     succ_result = result
+            #                     succ_probing_consensus_size = consensus_set_size
                                 
-                                if temp_attacker_ratio < estimated_attacker_ratio:
-                                    print_and_write_log('Larger consensus set ({} agents) probed. We will skip all the smaller consensus set tries. Update attacker ratio estimation to {}'.format(consensus_set_size, temp_attacker_ratio))
-                                    estimated_attacker_ratio = temp_attacker_ratio
-                                    # Record probing frame
-                                    N_th_frame_of_each_estimation[i] = idx
+            #                     if temp_attacker_ratio < estimated_attacker_ratio:
+            #                         print_and_write_log('Larger consensus set ({} agents) probed. We will skip all the smaller consensus set tries. Update attacker ratio estimation to {}'.format(consensus_set_size, temp_attacker_ratio))
+            #                         estimated_attacker_ratio = temp_attacker_ratio
+            #                         # Record probing frame
+            #                         N_th_frame_of_each_estimation[i] = idx
                                     
-                                    for j in range(i, len(estimate_attacker_ratio)):
-                                        # set all the larger attacker ratio to 0
-                                        NTry[j] = NMax[j]
+            #                         for j in range(i, len(estimate_attacker_ratio)):
+            #                             # set all the larger attacker ratio to 0
+            #                             NTry[j] = NMax[j]
 
-                                    break                                    
+            #                         break                                    
 
 
 
-            elif args.robosac == 'robosac_mAP': #Needs Evaluation                            
+            # elif args.robosac == 'robosac_mAP': #Needs Evaluation                            
                 # Given Step Budget N and Sampling Set Size s, perform predictions
 
-                num_sensor = num_agent_list[0][0]
-                ego_idx = args.ego_agent
-                all_agent_list = [i for i in range(num_sensor)]
-                # We always trust ourself
-                all_agent_list.remove(ego_idx)
-                # Not including ego agent, since ego agent is always used.
-                collab_agent_list = []
+                # num_sensor = num_agent_list[0][0]
+                # ego_idx = args.ego_agent
+                # all_agent_list = [i for i in range(num_sensor)]
+                # # We always trust ourself
+                # all_agent_list.remove(ego_idx)
+                # # Not including ego agent, since ego agent is always used.
+                # collab_agent_list = []
 
-                if args.robosac_k == None:
-                    consensus_set_size = cal_robosac_consensus(num_agent, args.step_budget, args.number_of_attackers)
+                # if args.robosac_k == None:
+                #     consensus_set_size = cal_robosac_consensus(num_agent, args.step_budget, args.number_of_attackers)
 
-                    print_and_write_log("\nStep Budget {}, Calculated Consensus Set Size {}:".format(args.step_budget, consensus_set_size))
+                #     print_and_write_log("\nStep Budget {}, Calculated Consensus Set Size {}:".format(args.step_budget, consensus_set_size))
 
-                    if(consensus_set_size < 1):
-                        print_and_write_log('Expected Consensus Agent below 1. Exit.'.format(consensus_set_size))
-                        sys.exit()
+                #     if(consensus_set_size < 1):
+                #         print_and_write_log('Expected Consensus Agent below 1. Exit.'.format(consensus_set_size))
+                #         sys.exit()
 
-                found = False
-                # NOTE: 0~step_budget-1
-                for step in range(1, args.step_budget + 1):
-                    # NOTE: random.choices will sample an agent more than once. eg.: [2, 3, 2]
-                    # So we should use random.sample(population, k) to avoid this.
-                    # collab_agent_list = random.sample(all_agent_list, k=args.robosac_k)
-                    if args.robosac_k == None:
-                        collab_agent_list = random.sample(all_agent_list, k=consensus_set_size)
-                    else:
-                        collab_agent_list = random.sample(all_agent_list, k=args.robosac_k)
-                    data['collab_agent_list'] = collab_agent_list
-                    data['no_fuse'] = False
-                    data['pert'] = pert.to(device)
+                # found = False
+                # # NOTE: 0~step_budget-1
+                # for step in range(1, args.step_budget + 1):
+                #     # NOTE: random.choices will sample an agent more than once. eg.: [2, 3, 2]
+                #     # So we should use random.sample(population, k) to avoid this.
+                #     # collab_agent_list = random.sample(all_agent_list, k=args.robosac_k)
+                #     if args.robosac_k == None:
+                #         collab_agent_list = random.sample(all_agent_list, k=consensus_set_size)
+                #     else:
+                #         collab_agent_list = random.sample(all_agent_list, k=args.robosac_k)
+                #     data['collab_agent_list'] = collab_agent_list
+                #     data['no_fuse'] = False
+                #     data['pert'] = pert.to(device)
 
-                    loss, cls_loss, loc_loss, result = fafmodule.predict_all(data, 1, num_agent=num_agent)
+                #     loss, cls_loss, loc_loss, result = fafmodule.predict_all(data, 1, num_agent=num_agent)
 
-                    # We use jaccard index to define the difference between two bbox sets
-                    jac_index = get_jaccard_index(config, num_agent_list, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result_reference, result)
-                    print_and_write_log("Jaccard Coefficient: {}".format(jac_index))
-                    if jac_index < args.box_matching_thresh:
-                        print_and_write_log('Attacker(s) is(are) among {}'.format(collab_agent_list))
-                    else:
-                        sus_agent_list = [i for i in all_agent_list if i not in collab_agent_list]
-                        print_and_write_log('Achieved consensus at step {}, with agents {}. Attacker(s) is(are) among {}, excluded'.format(step, collab_agent_list, sus_agent_list))
-                        found = True
-                        steps[frame_seq-1] = step
-                        succ += 1
-                        if args.visualization:
-                            # visualize consensus result
-                            visualize(config, filename0, save_fig_path, fafmodule, data, num_agent_list, padded_voxel_points, gt_max_iou, vis_tag='consensus')
-                        break
+                #     # We use jaccard index to define the difference between two bbox sets
+                #     jac_index = get_jaccard_index(config, num_agent_list, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result_reference, result)
+                #     print_and_write_log("Jaccard Coefficient: {}".format(jac_index))
+                #     if jac_index < args.box_matching_thresh:
+                #         print_and_write_log('Attacker(s) is(are) among {}'.format(collab_agent_list))
+                #     else:
+                #         sus_agent_list = [i for i in all_agent_list if i not in collab_agent_list]
+                #         print_and_write_log('Achieved consensus at step {}, with agents {}. Attacker(s) is(are) among {}, excluded'.format(step, collab_agent_list, sus_agent_list))
+                #         found = True
+                #         steps[frame_seq-1] = step
+                #         succ += 1
+                #         if args.visualization:
+                #             # visualize consensus result
+                #             visualize(config, filename0, save_fig_path, fafmodule, data, num_agent_list, padded_voxel_points, gt_max_iou, vis_tag='consensus')
+                #         break
 
-                if not found:
-                    print_and_write_log('No consensus!')
-                    # Can't achieve consensus, so fall back to original ego only result
-                    data['pert'] = None
-                    data['collab_agent_list'] = None
-                    data['no_fuse'] = True
-                    _, _, _, result_self_only = fafmodule.predict_all(data, 1, num_agent=num_agent)
-                    result = result_self_only
-                    steps[frame_seq-1] = args.step_budget
-                    ego_steps[frame_seq-1] = 1
-                    fail += 1
+                # if not found:
+                #     print_and_write_log('No consensus!')
+                #     # Can't achieve consensus, so fall back to original ego only result
+                #     data['pert'] = None
+                #     data['collab_agent_list'] = None
+                #     data['no_fuse'] = True
+                #     _, _, _, result_self_only = fafmodule.predict_all(data, 1, num_agent=num_agent)
+                #     result = result_self_only
+                #     steps[frame_seq-1] = args.step_budget
+                #     ego_steps[frame_seq-1] = 1
+                #     fail += 1
                 
-                if args.use_history_frame == True:
-                    # update reference frame for next iteration
-                    print_and_write_log("update frame {} result as reference frame result for the next frame".format(idx))
-                    result_reference = result
-                else:
-                    ego_steps[frame_seq - 1] = 1
+                # if args.use_history_frame == True:
+                #     # update reference frame for next iteration
+                #     print_and_write_log("update frame {} result as reference frame result for the next frame".format(idx))
+                #     result_reference = result
+                # else:
+                #     ego_steps[frame_seq - 1] = 1
                     
 
-                det_results_local, annotations_local = local_eval(num_agent, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result, config, det_results_local, annotations_local)
+                # det_results_local, annotations_local = local_eval(num_agent, padded_voxel_points, reg_target, anchors_map, gt_max_iou, result, config, det_results_local, annotations_local)
 
 
     print_and_write_log("\n Ego Agent:{}".format(args.ego_agent))
@@ -1254,12 +1262,12 @@ if __name__ == "__main__":
     parser.add_argument('--adv_iter', type=int, default=15, help='adv iterations of computing perturbation')
 
     # Scene and frame settings
-    parser.add_argument('--scene_id', type=list, default=[8,29,91,92], help='target evaluation scene') #Scene 8, 96, 97 has 6 agents.
+    parser.add_argument('--scene_id', type=list, default=[8], help='target evaluation scene') #Scene 8, 96, 97 has 6 agents.
     parser.add_argument('--sample_id', type=int, default=None, help='target evaluation sample')
     
     # Among Us modes and parameters
-    parser.add_argument('--robosac', type=str, default='', help='upperbound/lowerbound/no_defense/robosac_validation/robosac_mAP/adaptive/fix_attackers/performance_eval/probing')
-    parser.add_argument('--ego_agent', type=int, default=1, help='id of ego agent')
+    parser.add_argument('--robosac', type=str, default='no_defense', help='upperbound/lowerbound/no_defense/robosac_validation/robosac_mAP/adaptive/fix_attackers/performance_eval/probing')
+    parser.add_argument('--ego_agent', type=int, default=3, help='id of ego agent')
     parser.add_argument('--robosac_k', type=int, default=None, help='specify consensus set size if needed')
     parser.add_argument('--ego_loss_only', action="store_true", help='only use ego loss to compute adv perturbation')
     parser.add_argument('--step_budget', type=int, default=3, help='sampling budget in a single frame')

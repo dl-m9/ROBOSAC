@@ -8,3 +8,4 @@ from .CatFusion import CatFusion
 from .AgentWiseWeightedFusion import AgentWiseWeightedFusion
 from .TeacherNet import TeacherNet
 from .FaFNet import FaFNet
+from .myModel import ResNetBinaryClassifier

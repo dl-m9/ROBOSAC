@@ -575,7 +575,7 @@ class FaFModule(object):
                 
     
 
-    def cls_step(self,data,batch_size,invert_gt=False,return_result=False,no_fuse=False,self_result=None,ego_loss_only=False,ego_agent=1,adv_method='pgd'):
+    def cls_step(self,data,batch_size,invert_gt=False,return_result=False,no_fuse=False,self_result=None,ego_loss_only=False,ego_agent=1,adv_method='pgd', cp_guard_defense=False):
         bev_seq = data['bev_seq']
         labels = data['labels']
         # labels = data['bev_seq_teacher']
@@ -624,7 +624,7 @@ class FaFModule(object):
             return loss_cls.item()
 
     # normal case (pre & intermediate)
-    def predict_all(self, data, batch_size, validation=True, num_agent=5, adv_method=None):
+    def predict_all(self, data, batch_size, validation=True, num_agent=5, adv_method=None, cp_guard_defense=False):
         bev_seq = data["bev_seq"]
         # vis_maps = data["vis_maps"]
         trans_matrices = data["trans_matrices"]
@@ -702,7 +702,8 @@ class FaFModule(object):
                 batch_size=batch_size, pert=pert, no_fuse=no_fuse, 
                 unadv_pert=unadv_pert, collab_agent_list=collab_agent_list, 
                 trial_agent_id=trial_agent_id, attacker_list=attacker_list,
-                eps=eps, ego_agent=ego_agent, current_file_name=current_file_name, adv_method=adv_method
+                eps=eps, ego_agent=ego_agent, current_file_name=current_file_name, adv_method=adv_method,
+                cp_guard_defense=cp_guard_defense
             )
 
         N = bev_seq.shape[0]

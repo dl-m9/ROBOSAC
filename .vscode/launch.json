@@ -13,16 +13,15 @@
             "console": "integratedTerminal",
             "args": [
                 "--log", 
-                "--robosac", "no_defense",
+                "--robosac", "cp-guard",
                 "--adv_method", "cw-l2",
-                // "--visualization",
-                // "--no_cross_road",
                 "--random_attack",
                 "--number_of_attackers", "1",
-                // "--random_attack",
+                "--eps", "0.5",
+                "--data", "/data2/user2/senkang/CP-GuardBench/V2X-Sim-det/test_28/",
                 
             ],
-            // "cwd": "/data2/user2/senkang/CP-GuardBench/coperception/tools/det/",
+            "cwd": "/data2/user2/senkang/CP-GuardBench/",
             "env":{
                 "CUDA_VISIBLE_DEVICES": "3"
             },

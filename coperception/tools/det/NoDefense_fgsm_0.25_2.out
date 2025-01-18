@@ -1,0 +1,1671 @@
+Namespace(adv_iter=15, adv_method='fgsm', apply_late_fusion=0, batch=1, bound='both', box_com=False, box_matching_thresh=0.3, com='mean', compress_level=0, data='/data2/user2/senkang/CP-GuardBench/V2X-Sim-det/test_8/', ego_agent=1, ego_loss_only=False, eps=0.25, fix_attackers=False, gnn_iter_times=3, inference=None, kd_flag=0, kd_weight=100000, layer=3, log=True, logpath='', lr=0.001, nepoch=100, no_cross_road=False, num_agent=6, number_of_attackers=2, nworker=4, only_v2i=0, partial_upperbound=False, pert_alpha=0.1, pose_noise=0, random_attack=False, resume='/data2/user2/senkang/CP-GuardBench/coperception/ckpt/meanfusion/epoch_49.pth', resume_teacher='', robosac='cp-guard', robosac_k=None, sample_id=None, scene_id=[8], step_budget=3, tracking=False, use_history_frame=False, visualization=False, warp_flag=False)
+device number 1
+flag mean
+The number of val sequences: 100
+/home/user2/miniconda3/envs/coperception/lib/python3.7/site-packages/mmcv/__init__.py:21: UserWarning: On January 1, 2023, MMCV will release v2.0.0, in which it will remove components related to the training process and add a data transformation module. In addition, it will rename the package names mmcv to mmcv-lite and mmcv-full to mmcv. See https://github.com/open-mmlab/mmcv/blob/master/docs/en/compatibility.md for more details.
+  'On January 1, 2023, MMCV will release v2.0.0, in which it will remove '
+The number of val sequences: 100
+robosac.py:168: RuntimeWarning: divide by zero encountered in log
+  N = np.ceil(np.log(1 - 0.99) / np.log(1 - np.power(1 - eta, num_consensus))).astype(int)
+Validation dataset size: 100
+Load model from /data2/user2/senkang/CP-GuardBench/coperception/ckpt/meanfusion/epoch_49.pth, at epoch 49
+  0%|          | 0/100 [00:00<?, ?it/s]/home/user2/miniconda3/envs/coperception/lib/python3.7/site-packages/torch/nn/functional.py:3888: UserWarning: Default grid_sample and affine_grid behavior has changed to align_corners=False since 1.3.0. Please specify align_corners=True if the old behavior is desired. See the documentation of grid_sample for details.
+  "Default grid_sample and affine_grid behavior has changed "
+/home/user2/miniconda3/envs/coperception/lib/python3.7/site-packages/torch/nn/functional.py:3826: UserWarning: Default grid_sample and affine_grid behavior has changed to align_corners=False since 1.3.0. Please specify align_corners=True if the old behavior is desired. See the documentation of grid_sample for details.
+  "Default grid_sample and affine_grid behavior has changed "
+  1%|          | 1/100 [00:32<54:26, 33.00s/it]  2%|▏         | 2/100 [00:55<44:01, 26.96s/it]  3%|▎         | 3/100 [01:19<41:16, 25.53s/it]  4%|▍         | 4/100 [01:43<39:39, 24.79s/it]  5%|▌         | 5/100 [02:06<38:28, 24.30s/it]  6%|▌         | 6/100 [02:29<37:07, 23.69s/it]  7%|▋         | 7/100 [02:52<36:45, 23.72s/it]  8%|▊         | 8/100 [03:16<36:26, 23.77s/it]  9%|▉         | 9/100 [03:38<34:53, 23.01s/it] 10%|█         | 10/100 [04:01<34:33, 23.04s/it] 11%|█         | 11/100 [04:24<34:10, 23.04s/it] 12%|█▏        | 12/100 [04:46<33:34, 22.89s/it] 13%|█▎        | 13/100 [05:12<34:17, 23.65s/it] 14%|█▍        | 14/100 [05:35<33:45, 23.56s/it] 15%|█▌        | 15/100 [05:59<33:42, 23.79s/it] 16%|█▌        | 16/100 [06:22<33:00, 23.58s/it] 17%|█▋        | 17/100 [06:45<32:05, 23.20s/it] 18%|█▊        | 18/100 [07:08<31:32, 23.08s/it] 19%|█▉        | 19/100 [07:31<31:24, 23.26s/it]
+Scene 8, Frame 0:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 4]
+Agent 1 is adversarial 0.9644302129745483
+Agent 2 is adversarial 0.5514448881149292
+Agent 1 is adversarial 0.9997368454933167
+Agent 5 is adversarial 1.0
+Agent 1 is adversarial 0.5351173281669617
+Agent 3 is adversarial 0.9964179992675781
+selected:  6
+selected:  9
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 1:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 0]
+Agent 1 is adversarial 0.9685081243515015
+Agent 2 is adversarial 0.8923866152763367
+Agent 1 is adversarial 0.9993993043899536
+Agent 2 is adversarial 0.8596429228782654
+Agent 6 is adversarial 0.9992877840995789
+Agent 1 is adversarial 0.7333560585975647
+Agent 3 is adversarial 0.7884585857391357
+selected:  6
+selected:  6
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 2:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 4]
+Agent 1 is adversarial 0.9973520040512085
+Agent 2 is adversarial 0.7833839058876038
+Agent 1 is adversarial 0.9999978542327881
+Agent 5 is adversarial 1.0
+Agent 3 is adversarial 0.837019681930542
+selected:  5
+selected:  9
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 3:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 0]
+Agent 1 is adversarial 0.98426753282547
+Agent 2 is adversarial 0.7738444209098816
+Agent 1 is adversarial 0.9999723434448242
+Agent 2 is adversarial 0.9999191761016846
+Agent 1 is adversarial 0.8269815444946289
+Agent 3 is adversarial 0.9718145728111267
+selected:  5
+selected:  8
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 4:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 4]
+Agent 1 is adversarial 0.981579065322876
+Agent 2 is adversarial 0.5684075355529785
+Agent 1 is adversarial 0.9999866485595703
+Agent 5 is adversarial 1.0
+Agent 1 is adversarial 0.8937212824821472
+Agent 3 is adversarial 0.8943203091621399
+selected:  5
+selected:  9
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 5:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 2]
+Agent 1 is adversarial 0.9913080334663391
+Agent 2 is adversarial 0.6884722709655762
+Agent 1 is adversarial 0.9999289512634277
+Agent 2 is adversarial 0.6190447807312012
+Agent 6 is adversarial 0.9999686479568481
+Agent 1 is adversarial 0.929894208908081
+Agent 3 is adversarial 0.8267520070075989
+selected:  5
+selected:  7
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 6:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 5]
+Agent 1 is adversarial 0.9767104983329773
+Agent 1 is adversarial 0.9999005794525146
+Agent 6 is adversarial 0.9999507665634155
+Agent 1 is adversarial 0.6987043619155884
+Agent 3 is adversarial 0.9467061758041382
+selected:  9
+selected:  10
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 7:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 4]
+Agent 1 is adversarial 0.9899405837059021
+Agent 2 is adversarial 0.9659591913223267
+Agent 1 is adversarial 0.9999915361404419
+Agent 2 is adversarial 0.8703061938285828
+Agent 5 is adversarial 1.0
+Agent 3 is adversarial 0.9894641637802124
+selected:  4
+selected:  7
+selected:  9
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 8:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 2]
+Agent 1 is adversarial 0.9685020446777344
+Agent 2 is adversarial 0.7714276313781738
+Agent 1 is adversarial 0.9996789693832397
+Agent 6 is adversarial 0.9999064207077026
+Agent 1 is adversarial 0.8982058167457581
+Agent 3 is adversarial 0.9507521390914917
+selected:  7
+selected:  10
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 9:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 0]
+Agent 1 is adversarial 0.9873080849647522
+Agent 2 is adversarial 0.8357179760932922
+Agent 1 is adversarial 0.9999409914016724
+Agent 2 is adversarial 0.9367716908454895
+selected:  8
+selected:  8
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 10:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 2]
+Agent 1 is adversarial 0.9881479144096375
+Agent 2 is adversarial 0.8138025999069214
+Agent 1 is adversarial 0.9999974966049194
+Agent 2 is adversarial 0.7692350149154663
+Agent 5 is adversarial 1.0
+Agent 1 is adversarial 0.927422285079956
+Agent 3 is adversarial 0.91800856590271
+selected:  5
+selected:  7
+selected:  7
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 11:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 2]
+Agent 1 is adversarial 0.9906595945358276
+Agent 2 is adversarial 0.7836890816688538
+Agent 3 is adversarial 0.7541133165359497
+Agent 1 is adversarial 0.9987419247627258
+Agent 2 is adversarial 0.610716700553894
+Agent 1 is adversarial 0.6701962351799011
+Agent 3 is adversarial 0.9934250116348267
+selected:  3
+selected:  7
+selected:  9
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 12:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 5]
+Agent 1 is adversarial 0.9445052146911621
+Agent 1 is adversarial 0.9999959468841553
+Agent 6 is adversarial 0.9998249411582947
+Agent 1 is adversarial 0.6722580194473267
+Agent 3 is adversarial 0.9471774697303772
+selected:  9
+selected:  10
+selected:  7
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 13:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 3]
+Agent 1 is adversarial 0.9967312812805176
+Agent 2 is adversarial 0.5901757478713989
+Agent 1 is adversarial 0.9999985694885254
+Agent 2 is adversarial 0.9998935461044312
+Agent 1 is adversarial 0.8433694243431091
+Agent 3 is adversarial 0.991104245185852
+selected:  6
+selected:  8
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 14:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 4]
+Agent 1 is adversarial 0.9152176976203918
+Agent 2 is adversarial 0.5233595371246338
+Agent 1 is adversarial 0.9999754428863525
+Agent 2 is adversarial 0.9984425902366638
+Agent 5 is adversarial 1.0
+Agent 1 is adversarial 0.9091213345527649
+Agent 3 is adversarial 0.9861043095588684
+selected:  6
+selected:  8
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 15:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 5]
+Agent 1 is adversarial 0.9798033833503723
+Agent 2 is adversarial 0.8370405435562134
+Agent 1 is adversarial 0.9998784065246582
+Agent 6 is adversarial 0.9995960593223572
+Agent 1 is adversarial 0.9254768490791321
+Agent 3 is adversarial 0.9070486426353455
+selected:  6
+selected:  9
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 16:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 2]
+Agent 1 is adversarial 0.6013633012771606
+Agent 1 is adversarial 0.9999364614486694
+Agent 2 is adversarial 0.9854971766471863
+Agent 1 is adversarial 0.6188619136810303
+Agent 3 is adversarial 0.9844161868095398
+selected:  7
+selected:  7
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 17:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 5]
+Agent 1 is adversarial 0.9676804542541504
+Agent 1 is adversarial 0.99980229139328
+Agent 5 is adversarial 0.9999990463256836
+Agent 6 is adversarial 0.9999148845672607
+Agent 1 is adversarial 0.9499620795249939
+Agent 3 is adversarial 0.9642866253852844
+selected:  10
+selected:  8
+selected:  7
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 18:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 3]
+Agent 2 is adversarial 0.9109138250350952
+Agent 1 is adversarial 0.9993550181388855
+Agent 6 is adversarial 0.9996435642242432
+Agent 1 is adversarial 0.6125137805938721
+Agent 3 is adversarial 0.9999240636825562
+selected:  8
+selected:  9
+selected:  9
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 19:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 3]
+Agent 1 is adversarial 0.7888253927230835
+Agent 2 is adversarial 0.8783198595046997
+Agent 3 is adversarial 0.6820053458213806
+Agent 1 is adversarial 1.0
+Agent 3 is adversarial 0.8971699476242065
+Agent 1 is adversarial 0.6920450925827026
+Agent 3 is adversarial 0.9993481040000916 20%|██        | 20/100 [07:54<30:42, 23.03s/it] 21%|██        | 21/100 [08:18<30:41, 23.31s/it] 22%|██▏       | 22/100 [08:41<30:08, 23.18s/it] 23%|██▎       | 23/100 [09:05<30:19, 23.64s/it] 24%|██▍       | 24/100 [09:30<30:29, 24.08s/it] 25%|██▌       | 25/100 [09:54<29:55, 23.94s/it] 26%|██▌       | 26/100 [10:18<29:39, 24.05s/it] 27%|██▋       | 27/100 [10:41<28:45, 23.64s/it] 28%|██▊       | 28/100 [11:03<27:54, 23.25s/it] 29%|██▉       | 29/100 [11:28<28:09, 23.80s/it] 30%|███       | 30/100 [11:51<27:24, 23.49s/it] 31%|███       | 31/100 [12:15<27:03, 23.53s/it] 32%|███▏      | 32/100 [12:38<26:35, 23.46s/it] 33%|███▎      | 33/100 [13:02<26:10, 23.44s/it] 34%|███▍      | 34/100 [13:24<25:25, 23.11s/it] 35%|███▌      | 35/100 [13:48<25:27, 23.49s/it] 36%|███▌      | 36/100 [14:11<24:47, 23.24s/it] 37%|███▋      | 37/100 [14:35<24:38, 23.46s/it] 38%|███▊      | 38/100 [14:58<24:11, 23.42s/it] 39%|███▉      | 39/100 [15:20<23:10, 22.80s/it] 40%|████      | 40/100 [15:43<22:54, 22.91s/it] 41%|████      | 41/100 [16:06<22:37, 23.00s/it] 42%|████▏     | 42/100 [16:27<21:39, 22.40s/it]
+selected:  5
+selected:  8
+selected:  9
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 20:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 4]
+Agent 1 is adversarial 0.9921080470085144
+Agent 3 is adversarial 0.9688284397125244
+Agent 1 is adversarial 0.999862551689148
+Agent 5 is adversarial 1.0
+Agent 6 is adversarial 0.9998587369918823
+Agent 1 is adversarial 0.8560290336608887
+Agent 3 is adversarial 0.63456791639328
+selected:  8
+selected:  10
+selected:  9
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 21:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 3]
+Agent 1 is adversarial 0.9325699210166931
+Agent 3 is adversarial 0.6217740178108215
+Agent 1 is adversarial 0.9992827773094177
+Agent 2 is adversarial 0.5356463193893433
+selected:  11
+selected:  6
+selected:  9
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 22:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 5]
+Agent 1 is adversarial 0.8460650444030762
+Agent 3 is adversarial 0.8192036747932434
+Agent 1 is adversarial 0.9893217086791992
+Agent 6 is adversarial 0.9999873638153076
+Agent 1 is adversarial 0.8475672602653503
+Agent 3 is adversarial 0.9100435972213745
+selected:  8
+selected:  9
+selected:  8
+selected:  5
+selected:  5
+selected:  2
+
+Scene 8, Frame 23:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 0]
+Agent 1 is adversarial 0.9973510503768921
+Agent 1 is adversarial 0.7113016247749329
+Agent 3 is adversarial 0.9921187162399292
+selected:  9
+selected:  9
+selected:  9
+selected:  5
+selected:  5
+selected:  2
+
+Scene 8, Frame 24:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 4]
+Agent 1 is adversarial 0.8972918391227722
+Agent 3 is adversarial 0.9131733179092407
+Agent 1 is adversarial 0.9990434050559998
+Agent 5 is adversarial 1.0
+Agent 3 is adversarial 0.9995390176773071
+selected:  6
+selected:  8
+selected:  9
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 25:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 0]
+Agent 2 is adversarial 0.9764316082000732
+Agent 3 is adversarial 0.9916886687278748
+Agent 1 is adversarial 0.8097095489501953
+Agent 2 is adversarial 0.9237717986106873
+Agent 1 is adversarial 0.9999791383743286
+Agent 3 is adversarial 0.844036877155304
+selected:  9
+selected:  7
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 26:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 3]
+Agent 2 is adversarial 0.6792837381362915
+Agent 3 is adversarial 0.9991649389266968
+Agent 1 is adversarial 0.991974413394928
+Agent 2 is adversarial 0.983032763004303
+Agent 6 is adversarial 0.9999735355377197
+Agent 1 is adversarial 0.9581636786460876
+Agent 3 is adversarial 0.9991539716720581
+selected:  10
+selected:  7
+selected:  7
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 27:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 3]
+Agent 3 is adversarial 0.999997615814209
+Agent 1 is adversarial 0.9997900128364563
+Agent 2 is adversarial 0.9947116374969482
+Agent 6 is adversarial 0.9999858140945435
+Agent 1 is adversarial 0.9289948344230652
+Agent 2 is adversarial 0.9153263568878174
+Agent 3 is adversarial 0.7929036021232605
+selected:  8
+selected:  6
+selected:  5
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 28:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 3]
+Agent 3 is adversarial 0.9999887943267822
+Agent 1 is adversarial 0.9999854564666748
+Agent 1 is adversarial 0.989010751247406
+selected:  9
+selected:  8
+selected:  9
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 29:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 4]
+Agent 3 is adversarial 0.9996860027313232
+Agent 1 is adversarial 0.9062318205833435
+Agent 2 is adversarial 0.9170401096343994
+Agent 5 is adversarial 0.9999371767044067
+Agent 1 is adversarial 0.999579131603241
+Agent 3 is adversarial 0.9169579148292542
+selected:  9
+selected:  7
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 30:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 0]
+Agent 3 is adversarial 0.999923586845398
+Agent 2 is adversarial 0.7471503615379333
+Agent 6 is adversarial 0.9998308420181274
+Agent 1 is adversarial 0.9900964498519897
+selected:  8
+selected:  9
+selected:  8
+selected:  5
+selected:  4
+selected:  3
+
+Scene 8, Frame 31:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 2]
+Agent 3 is adversarial 0.9998724460601807
+Agent 5 is adversarial 0.7700673937797546
+Agent 1 is adversarial 0.9992024302482605
+selected:  8
+selected:  6
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 32:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 5]
+Agent 3 is adversarial 0.9999768733978271
+Agent 2 is adversarial 0.9999812841415405
+Agent 6 is adversarial 0.9999352693557739
+Agent 1 is adversarial 0.9999891519546509
+selected:  11
+selected:  8
+selected:  8
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 33:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 0]
+Agent 3 is adversarial 0.9999983310699463
+Agent 1 is adversarial 0.930071234703064
+Agent 1 is adversarial 0.9999433755874634
+Agent 2 is adversarial 0.9925002455711365
+selected:  10
+selected:  9
+selected:  7
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 34:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 5]
+Agent 3 is adversarial 0.9999924898147583
+Agent 6 is adversarial 0.9999324083328247
+Agent 1 is adversarial 0.999393105506897
+Agent 2 is adversarial 0.7727859020233154
+selected:  9
+selected:  9
+selected:  7
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 35:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 4]
+Agent 1 is adversarial 0.5580793023109436
+Agent 3 is adversarial 0.9999264478683472
+Agent 2 is adversarial 0.5740507245063782
+Agent 5 is adversarial 0.9999990463256836
+Agent 1 is adversarial 0.9995997548103333
+Agent 2 is adversarial 0.7329120635986328
+selected:  6
+selected:  8
+selected:  9
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 36:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 3]
+Agent 3 is adversarial 0.9999643564224243
+Agent 3 is adversarial 0.9827156066894531
+Agent 1 is adversarial 0.9999020099639893
+selected:  9
+selected:  8
+selected:  9
+selected:  5
+selected:  4
+selected:  2
+
+Scene 8, Frame 37:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 2]
+Agent 3 is adversarial 0.9999939203262329
+Agent 3 is adversarial 0.9930758476257324
+Agent 6 is adversarial 0.999894380569458
+Agent 1 is adversarial 0.9999719858169556
+selected:  10
+selected:  9
+selected:  8
+selected:  5
+selected:  4
+selected:  3
+
+Scene 8, Frame 38:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 5]
+Agent 1 is adversarial 0.5882737636566162
+Agent 3 is adversarial 0.999995231628418
+Agent 5 is adversarial 0.9999966621398926
+Agent 6 is adversarial 0.9999232292175293
+Agent 1 is adversarial 0.997238039970398
+selected:  5
+selected:  8
+selected:  8
+selected:  5
+selected:  5
+selected:  2
+
+Scene 8, Frame 39:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 4]
+Agent 1 is adversarial 0.5970291495323181
+Agent 3 is adversarial 0.999991774559021
+Agent 2 is adversarial 0.9933140873908997
+Agent 5 is adversarial 0.9999854564666748
+Agent 1 is adversarial 0.9990297555923462
+Agent 2 is adversarial 0.8806749582290649
+selected:  5
+selected:  10
+selected:  7
+selected:  6
+selected:  4
+selected:  1
+
+Scene 8, Frame 40:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 2]
+Agent 3 is adversarial 0.9998924732208252
+Agent 3 is adversarial 0.9999998807907104
+Agent 6 is adversarial 0.9999281167984009
+Agent 1 is adversarial 0.9999834299087524
+Agent 2 is adversarial 0.7356297373771667
+selected:  11
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  4
+
+Scene 8, Frame 41:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 3]
+Agent 1 is adversarial 0.5589106678962708
+Agent 3 is adversarial 0.9999984502792358
+Agent 1 is adversarial 0.999967098236084
+selected:  6
+selected:  11
+selected:  10
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 42: 43%|████▎     | 43/100 [16:50<21:31, 22.66s/it] 44%|████▍     | 44/100 [17:13<21:15, 22.77s/it] 45%|████▌     | 45/100 [17:36<20:44, 22.62s/it] 46%|████▌     | 46/100 [17:58<20:13, 22.47s/it] 47%|████▋     | 47/100 [18:20<19:45, 22.37s/it] 48%|████▊     | 48/100 [18:42<19:19, 22.30s/it] 49%|████▉     | 49/100 [19:05<19:03, 22.43s/it] 50%|█████     | 50/100 [19:27<18:34, 22.29s/it] 51%|█████     | 51/100 [19:50<18:25, 22.56s/it] 52%|█████▏    | 52/100 [20:12<17:57, 22.45s/it] 53%|█████▎    | 53/100 [20:36<17:55, 22.88s/it] 54%|█████▍    | 54/100 [20:57<17:01, 22.21s/it] 55%|█████▌    | 55/100 [21:19<16:47, 22.40s/it] 56%|█████▌    | 56/100 [21:43<16:41, 22.75s/it] 57%|█████▋    | 57/100 [22:06<16:17, 22.72s/it] 58%|█████▊    | 58/100 [22:29<15:58, 22.82s/it] 59%|█████▉    | 59/100 [22:51<15:30, 22.69s/it] 60%|██████    | 60/100 [23:12<14:45, 22.13s/it] 61%|██████    | 61/100 [23:35<14:40, 22.57s/it] 62%|██████▏   | 62/100 [23:57<14:03, 22.19s/it] 63%|██████▎   | 63/100 [24:20<13:55, 22.58s/it] 64%|██████▍   | 64/100 [24:41<13:09, 21.92s/it]
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 2]
+Agent 1 is adversarial 0.7468088269233704
+Agent 3 is adversarial 0.9999921321868896
+Agent 3 is adversarial 0.9999372959136963
+Agent 5 is adversarial 0.9999971389770508
+Agent 1 is adversarial 0.9999485015869141
+Agent 2 is adversarial 0.8409292101860046
+selected:  7
+selected:  8
+selected:  7
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 43:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 5]
+Agent 3 is adversarial 0.9999960660934448
+Agent 6 is adversarial 0.9996985197067261
+Agent 1 is adversarial 0.9999927282333374
+selected:  9
+selected:  11
+selected:  8
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 44:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 5]
+Agent 1 is adversarial 0.7316122651100159
+Agent 3 is adversarial 0.9999945163726807
+Agent 5 is adversarial 0.9999879598617554
+Agent 6 is adversarial 0.9993588328361511
+Agent 1 is adversarial 0.9998335838317871
+selected:  6
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 45:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 2]
+Agent 3 is adversarial 0.9999974966049194
+Agent 3 is adversarial 0.9997811913490295
+Agent 5 is adversarial 0.9998811483383179
+Agent 1 is adversarial 0.9999098777770996
+Agent 2 is adversarial 0.7337167263031006
+selected:  8
+selected:  10
+selected:  9
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 46:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 0]
+Agent 3 is adversarial 0.9999964237213135
+Agent 2 is adversarial 0.9976099729537964
+Agent 5 is adversarial 0.9999963045120239
+Agent 1 is adversarial 0.9999873638153076
+selected:  10
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 47:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 2]
+Agent 3 is adversarial 0.9999986886978149
+Agent 3 is adversarial 0.9957858920097351
+Agent 1 is adversarial 0.9999986886978149
+Agent 2 is adversarial 0.7890225052833557
+selected:  10
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 48:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 5]
+Agent 1 is adversarial 0.719592273235321
+Agent 3 is adversarial 0.9999910593032837
+Agent 2 is adversarial 0.9911661744117737
+Agent 6 is adversarial 0.9999983310699463
+Agent 1 is adversarial 0.9999830722808838
+selected:  6
+selected:  10
+selected:  9
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 49:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 0]
+Agent 1 is adversarial 0.8988072872161865
+Agent 3 is adversarial 0.9999979734420776
+Agent 2 is adversarial 0.859928548336029
+Agent 3 is adversarial 0.9949969053268433
+Agent 1 is adversarial 0.9996893405914307
+selected:  6
+selected:  8
+selected:  8
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 50:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 2]
+Agent 3 is adversarial 0.9999889135360718
+Agent 3 is adversarial 0.9972969889640808
+Agent 6 is adversarial 0.9999245405197144
+Agent 1 is adversarial 0.9998573064804077
+Agent 2 is adversarial 0.7811360359191895
+selected:  8
+selected:  8
+selected:  8
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 51:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 2]
+Agent 3 is adversarial 0.9999933242797852
+Agent 3 is adversarial 0.9998205304145813
+Agent 6 is adversarial 0.9987726807594299
+Agent 1 is adversarial 0.9997957348823547
+selected:  9
+selected:  9
+selected:  9
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 52:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 2]
+Agent 1 is adversarial 0.6083081364631653
+Agent 3 is adversarial 0.9999978542327881
+Agent 2 is adversarial 0.642641544342041
+Agent 3 is adversarial 0.9957355260848999
+Agent 1 is adversarial 0.9999953508377075
+Agent 2 is adversarial 0.8622725605964661
+selected:  8
+selected:  8
+selected:  8
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 53:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 5]
+Agent 1 is adversarial 0.9249265193939209
+Agent 3 is adversarial 0.999987006187439
+Agent 3 is adversarial 0.9984288811683655
+Agent 6 is adversarial 0.999991774559021
+Agent 1 is adversarial 0.999977707862854
+Agent 2 is adversarial 0.8723539710044861
+selected:  6
+selected:  8
+selected:  8
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 54:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 3]
+Agent 3 is adversarial 0.9999995231628418
+Agent 3 is adversarial 0.9998247027397156
+Agent 1 is adversarial 0.9995019435882568
+Agent 2 is adversarial 0.7426536083221436
+selected:  9
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 55:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 4]
+Agent 3 is adversarial 0.9999760389328003
+Agent 5 is adversarial 0.9998708963394165
+Agent 6 is adversarial 0.9999983310699463
+Agent 1 is adversarial 0.999862551689148
+selected:  11
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 56:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 0]
+Agent 3 is adversarial 0.9999996423721313
+Agent 2 is adversarial 0.9926154613494873
+Agent 1 is adversarial 0.9999202489852905
+Agent 2 is adversarial 0.9711460471153259
+selected:  8
+selected:  10
+selected:  7
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 57:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 4]
+Agent 3 is adversarial 0.9999983310699463
+Agent 3 is adversarial 0.9976346492767334
+Agent 5 is adversarial 0.9999784231185913
+Agent 1 is adversarial 0.999559223651886
+Agent 2 is adversarial 0.9126123785972595
+selected:  10
+selected:  8
+selected:  9
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 58:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 2]
+Agent 1 is adversarial 0.840524435043335
+Agent 3 is adversarial 0.9999905824661255
+Agent 2 is adversarial 0.9962126016616821
+Agent 3 is adversarial 0.999491810798645
+Agent 1 is adversarial 0.9999740123748779
+Agent 2 is adversarial 0.5245103240013123
+selected:  6
+selected:  8
+selected:  7
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 59:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 4]
+Agent 1 is adversarial 0.9518489837646484
+Agent 3 is adversarial 0.9999978542327881
+Agent 5 is adversarial 0.9999779462814331
+Agent 6 is adversarial 0.9999979734420776
+Agent 1 is adversarial 0.9999972581863403
+selected:  6
+selected:  9
+selected:  9
+selected:  5
+selected:  3
+selected:  2
+
+Scene 8, Frame 60:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 0]
+Agent 3 is adversarial 0.9999964237213135
+Agent 6 is adversarial 0.999923825263977
+Agent 1 is adversarial 0.9999707937240601
+Agent 2 is adversarial 0.8781194090843201
+selected:  9
+selected:  9
+selected:  7
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 61:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 5]
+Agent 1 is adversarial 0.7065091729164124
+Agent 3 is adversarial 0.9999995231628418
+Agent 3 is adversarial 0.9995651841163635
+Agent 6 is adversarial 0.9999990463256836
+Agent 1 is adversarial 0.9999947547912598
+selected:  7
+selected:  9
+selected:  9
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 62:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 5]
+Agent 3 is adversarial 0.999998927116394
+Agent 5 is adversarial 0.9999752044677734
+Agent 6 is adversarial 1.0
+Agent 1 is adversarial 0.9999685287475586
+selected:  9
+selected:  9
+selected:  9
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 63:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 5]
+Agent 1 is adversarial 0.839020311832428
+Agent 3 is adversarial 0.9999994039535522
+Agent 3 is adversarial 0.9998001456260681
+Agent 6 is adversarial 0.9999978542327881
+Agent 1 is adversarial 0.9997758269309998
+Agent 2 is adversarial 0.8388826251029968
+selected:  6
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 64:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 3] 65%|██████▌   | 65/100 [25:02<12:37, 21.63s/it] 66%|██████▌   | 66/100 [25:25<12:31, 22.10s/it] 67%|██████▋   | 67/100 [25:46<11:57, 21.75s/it] 68%|██████▊   | 68/100 [26:08<11:43, 21.98s/it] 69%|██████▉   | 69/100 [26:33<11:43, 22.70s/it] 70%|███████   | 70/100 [26:57<11:32, 23.07s/it] 71%|███████   | 71/100 [27:20<11:16, 23.33s/it] 72%|███████▏  | 72/100 [27:43<10:49, 23.20s/it] 73%|███████▎  | 73/100 [28:04<10:04, 22.38s/it] 74%|███████▍  | 74/100 [28:24<09:26, 21.80s/it] 75%|███████▌  | 75/100 [28:42<08:37, 20.70s/it] 76%|███████▌  | 76/100 [29:02<08:10, 20.42s/it] 77%|███████▋  | 77/100 [29:22<07:44, 20.20s/it] 78%|███████▊  | 78/100 [29:41<07:18, 19.92s/it] 79%|███████▉  | 79/100 [30:00<06:51, 19.62s/it] 80%|████████  | 80/100 [30:19<06:29, 19.47s/it] 81%|████████  | 81/100 [30:39<06:09, 19.43s/it] 82%|████████▏ | 82/100 [30:59<05:53, 19.63s/it] 83%|████████▎ | 83/100 [31:18<05:32, 19.53s/it] 84%|████████▍ | 84/100 [31:37<05:12, 19.51s/it] 85%|████████▌ | 85/100 [31:57<04:51, 19.44s/it] 86%|████████▌ | 86/100 [32:17<04:33, 19.57s/it] 87%|████████▋ | 87/100 [32:35<04:10, 19.27s/it]
+Agent 1 is adversarial 0.7612722516059875
+Agent 3 is adversarial 0.9999979734420776
+Agent 1 is adversarial 0.9995105266571045
+Agent 2 is adversarial 0.9523975253105164
+selected:  7
+selected:  9
+selected:  7
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 65:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 0]
+Agent 3 is adversarial 0.999975323677063
+Agent 2 is adversarial 0.9997687935829163
+Agent 1 is adversarial 0.9996631145477295
+Agent 2 is adversarial 0.9418386220932007
+selected:  8
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 66:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 2]
+Agent 3 is adversarial 0.999995231628418
+Agent 3 is adversarial 0.9971787929534912
+Agent 5 is adversarial 0.9998505115509033
+Agent 1 is adversarial 0.9958056211471558
+selected:  9
+selected:  8
+selected:  9
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 67:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 5]
+Agent 3 is adversarial 0.9999948740005493
+Agent 5 is adversarial 0.9999504089355469
+Agent 6 is adversarial 0.9999951124191284
+Agent 1 is adversarial 0.9999122619628906
+Agent 2 is adversarial 0.7207037210464478
+selected:  9
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 68:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 0]
+Agent 3 is adversarial 0.9999984502792358
+Agent 2 is adversarial 0.999976634979248
+Agent 3 is adversarial 0.9999090433120728
+Agent 1 is adversarial 0.9999854564666748
+selected:  9
+selected:  9
+selected:  9
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 69:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 3]
+Agent 1 is adversarial 0.6457724571228027
+Agent 3 is adversarial 0.9999552965164185
+Agent 3 is adversarial 0.9988924860954285
+Agent 1 is adversarial 0.999984622001648
+Agent 2 is adversarial 0.9259480834007263
+selected:  6
+selected:  8
+selected:  8
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 70:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 2]
+Agent 3 is adversarial 0.9999946355819702
+Agent 3 is adversarial 0.9998383522033691
+Agent 1 is adversarial 0.9999986886978149
+selected:  9
+selected:  10
+selected:  8
+selected:  5
+selected:  3
+selected:  1
+
+Scene 8, Frame 71:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 4]
+Agent 1 is adversarial 0.9391120672225952
+Agent 3 is adversarial 0.9999983310699463
+Agent 5 is adversarial 0.9999005794525146
+Agent 1 is adversarial 0.9994083642959595
+selected:  6
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  4
+
+Scene 8, Frame 72:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 3]
+Agent 3 is adversarial 0.9999984502792358
+Agent 5 is adversarial 0.9964725375175476
+Agent 1 is adversarial 0.9999915361404419
+Agent 2 is adversarial 0.6532817482948303
+selected:  9
+selected:  10
+selected:  9
+selected:  5
+selected:  3
+selected:  5
+
+Scene 8, Frame 73:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 3]
+Agent 1 is adversarial 0.5074034929275513
+Agent 3 is adversarial 0.9999988079071045
+Agent 2 is adversarial 0.6968704462051392
+Agent 1 is adversarial 0.999957799911499
+Agent 2 is adversarial 0.8516609072685242
+selected:  7
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  5
+
+Scene 8, Frame 74:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 4]
+Agent 1 is adversarial 0.908969521522522
+Agent 3 is adversarial 0.9999991655349731
+Agent 5 is adversarial 0.9999997615814209
+Agent 1 is adversarial 0.9999692440032959
+Agent 2 is adversarial 0.657117486000061
+selected:  6
+selected:  9
+selected:  8
+selected:  5
+selected:  3
+selected:  6
+
+Scene 8, Frame 75:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 3]
+Agent 3 is adversarial 0.9999996423721313
+Agent 2 is adversarial 0.9998581409454346
+Agent 1 is adversarial 0.9999914169311523
+Agent 2 is adversarial 0.913833737373352
+selected:  10
+selected:  11
+selected:  8
+selected:  6
+selected:  4
+selected:  7
+
+Scene 8, Frame 76:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 4]
+Agent 3 is adversarial 0.9999994039535522
+Agent 3 is adversarial 0.9997708201408386
+Agent 5 is adversarial 0.9997331500053406
+Agent 1 is adversarial 0.9999508857727051
+Agent 2 is adversarial 0.7045342326164246
+selected:  10
+selected:  10
+selected:  9
+selected:  6
+selected:  4
+selected:  8
+
+Scene 8, Frame 77:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 5]
+Agent 3 is adversarial 0.9999997615814209
+Agent 2 is adversarial 0.6665505766868591
+Agent 6 is adversarial 0.9999983310699463
+Agent 1 is adversarial 0.9988057613372803
+selected:  9
+selected:  10
+selected:  8
+selected:  6
+selected:  4
+selected:  10
+
+Scene 8, Frame 78:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 2]
+Agent 1 is adversarial 0.9415645003318787
+Agent 3 is adversarial 0.9999998807907104
+Agent 2 is adversarial 0.6929256916046143
+Agent 3 is adversarial 0.9994286894798279
+Agent 1 is adversarial 0.9999990463256836
+Agent 2 is adversarial 0.8742486238479614
+selected:  6
+selected:  9
+selected:  8
+selected:  6
+selected:  4
+selected:  10
+
+Scene 8, Frame 79:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 3]
+Agent 1 is adversarial 0.795221745967865
+Agent 3 is adversarial 0.9998986721038818
+Agent 2 is adversarial 0.9911642670631409
+Agent 1 is adversarial 0.9999958276748657
+selected:  7
+selected:  10
+selected:  9
+selected:  6
+selected:  4
+selected:  10
+
+Scene 8, Frame 80:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 5]
+Agent 3 is adversarial 0.999996542930603
+Agent 6 is adversarial 1.0
+Agent 1 is adversarial 0.9998377561569214
+Agent 2 is adversarial 0.7314116954803467
+selected:  12
+selected:  9
+selected:  8
+selected:  6
+selected:  4
+selected:  11
+
+Scene 8, Frame 81:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 2]
+Agent 3 is adversarial 0.9999995231628418
+Agent 3 is adversarial 0.9969295859336853
+Agent 6 is adversarial 1.0
+Agent 1 is adversarial 0.9999427795410156
+Agent 2 is adversarial 0.803180992603302
+selected:  10
+selected:  10
+selected:  8
+selected:  7
+selected:  5
+selected:  11
+
+Scene 8, Frame 82:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 3]
+Agent 1 is adversarial 0.6680525541305542
+Agent 3 is adversarial 0.9999849796295166
+Agent 2 is adversarial 0.9980320334434509
+Agent 1 is adversarial 0.9999698400497437
+Agent 2 is adversarial 0.9152151942253113
+selected:  8
+selected:  12
+selected:  8
+selected:  7
+selected:  5
+selected:  9
+
+Scene 8, Frame 83:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 0]
+Agent 1 is adversarial 0.8228613138198853
+Agent 3 is adversarial 0.9999957084655762
+Agent 2 is adversarial 0.9916353225708008
+Agent 5 is adversarial 0.9999392032623291
+Agent 1 is adversarial 0.9999904632568359
+Agent 2 is adversarial 0.7969821095466614
+selected:  9
+selected:  11
+selected:  9
+selected:  7
+selected:  5
+selected:  9
+
+Scene 8, Frame 84:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 2]
+Agent 3 is adversarial 0.9999979734420776
+Agent 3 is adversarial 0.999789297580719
+Agent 1 is adversarial 0.9999934434890747
+Agent 2 is adversarial 0.9873948097229004
+selected:  11
+selected:  11
+selected:  9
+selected:  7
+selected:  5
+selected:  9
+
+Scene 8, Frame 85:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 5]
+Agent 3 is adversarial 0.9999996423721313
+Agent 6 is adversarial 1.0
+Agent 1 is adversarial 0.999904990196228
+Agent 2 is adversarial 0.6905909180641174
+selected:  12
+selected:  10
+selected:  9
+selected:  7
+selected:  5
+selected:  9
+
+Scene 8, Frame 86:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 2]
+Agent 3 is adversarial 0.9999972581863403
+Agent 3 is adversarial 0.996094286441803
+Agent 1 is adversarial 0.9999639987945557
+Agent 2 is adversarial 0.918275773525238
+selected:  10
+selected:  10
+selected:  9
+selected:  7
+selected:  5
+selected:  9
+
+Scene 8, Frame 87:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 5]
+Agent 3 is adversarial 0.9999998807907104 88%|████████▊ | 88/100 [32:54<03:49, 19.10s/it] 89%|████████▉ | 89/100 [33:13<03:30, 19.16s/it] 90%|█████████ | 90/100 [33:33<03:13, 19.37s/it] 91%|█████████ | 91/100 [33:53<02:57, 19.72s/it] 92%|█████████▏| 92/100 [34:13<02:37, 19.69s/it] 93%|█████████▎| 93/100 [34:32<02:15, 19.40s/it] 94%|█████████▍| 94/100 [34:52<01:57, 19.61s/it] 95%|█████████▌| 95/100 [35:12<01:39, 19.80s/it] 96%|█████████▌| 96/100 [35:33<01:20, 20.17s/it] 97%|█████████▋| 97/100 [35:52<00:59, 19.89s/it] 98%|█████████▊| 98/100 [36:12<00:39, 19.79s/it] 99%|█████████▉| 99/100 [36:32<00:19, 19.95s/it]100%|██████████| 100/100 [36:53<00:00, 20.08s/it]100%|██████████| 100/100 [36:53<00:00, 22.13s/it]
+Agent 3 is adversarial 0.999962329864502
+Agent 6 is adversarial 0.9999991655349731
+Agent 1 is adversarial 0.9999562501907349
+Agent 2 is adversarial 0.7193384766578674
+selected:  12
+selected:  11
+selected:  10
+selected:  7
+selected:  5
+selected:  9
+
+Scene 8, Frame 88:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 0]
+Agent 3 is adversarial 0.9999880790710449
+Agent 2 is adversarial 0.9989211559295654
+Agent 3 is adversarial 0.9960136413574219
+Agent 1 is adversarial 0.9999967813491821
+selected:  12
+selected:  11
+selected:  9
+selected:  7
+selected:  5
+selected:  9
+
+Scene 8, Frame 89:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 0]
+Agent 3 is adversarial 0.999929666519165
+Agent 2 is adversarial 0.9998563528060913
+Agent 6 is adversarial 0.9999959468841553
+Agent 1 is adversarial 0.9999746084213257
+Agent 2 is adversarial 0.834356963634491
+selected:  12
+selected:  10
+selected:  10
+selected:  7
+selected:  6
+selected:  9
+
+Scene 8, Frame 90:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 4]
+Agent 1 is adversarial 0.6789438128471375
+Agent 3 is adversarial 0.9999996423721313
+Agent 5 is adversarial 0.9999858140945435
+Agent 6 is adversarial 0.999873161315918
+Agent 1 is adversarial 0.9999992847442627
+selected:  9
+selected:  11
+selected:  9
+selected:  7
+selected:  6
+selected:  9
+
+Scene 8, Frame 91:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 3]
+Agent 1 is adversarial 0.6898905634880066
+Agent 3 is adversarial 0.9999964237213135
+Agent 3 is adversarial 0.996764063835144
+Agent 1 is adversarial 0.9999805688858032
+Agent 2 is adversarial 0.8147547245025635
+selected:  9
+selected:  11
+selected:  9
+selected:  7
+selected:  6
+selected:  9
+
+Scene 8, Frame 92:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [2, 5]
+Agent 1 is adversarial 0.5051449537277222
+Agent 3 is adversarial 0.9999992847442627
+Agent 3 is adversarial 0.9999382495880127
+Agent 6 is adversarial 0.9999998807907104
+Agent 1 is adversarial 0.9999569654464722
+Agent 2 is adversarial 0.7267546653747559
+selected:  9
+selected:  9
+selected:  10
+selected:  7
+selected:  6
+selected:  11
+
+Scene 8, Frame 93:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 5]
+Agent 3 is adversarial 0.9999935626983643
+Agent 6 is adversarial 0.9999997615814209
+Agent 1 is adversarial 0.9999903440475464
+Agent 2 is adversarial 0.7374809384346008
+selected:  9
+selected:  10
+selected:  10
+selected:  7
+selected:  6
+selected:  10
+
+Scene 8, Frame 94:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 0]
+Agent 3 is adversarial 0.9999994039535522
+Agent 2 is adversarial 0.9999455213546753
+Agent 6 is adversarial 1.0
+Agent 1 is adversarial 0.8154983520507812
+selected:  10
+selected:  11
+selected:  11
+selected:  7
+selected:  6
+selected:  10
+
+Scene 8, Frame 95:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [0, 3]
+Agent 3 is adversarial 0.9999996423721313
+Agent 2 is adversarial 0.9978750944137573
+Agent 1 is adversarial 0.9999523162841797
+selected:  12
+selected:  12
+selected:  10
+selected:  7
+selected:  6
+selected:  10
+
+Scene 8, Frame 96:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 4]
+Agent 1 is adversarial 0.5169073939323425
+Agent 3 is adversarial 0.9999998807907104
+Agent 5 is adversarial 0.9996832609176636
+Agent 6 is adversarial 0.9999991655349731
+Agent 1 is adversarial 0.9992544054985046
+selected:  9
+selected:  10
+selected:  12
+selected:  7
+selected:  6
+selected:  10
+
+Scene 8, Frame 97:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [4, 0]
+Agent 1 is adversarial 0.5341637134552002
+Agent 3 is adversarial 0.9999998807907104
+Agent 2 is adversarial 0.9177653789520264
+Agent 5 is adversarial 0.9999746084213257
+Agent 1 is adversarial 0.9999908208847046
+selected:  9
+selected:  11
+selected:  10
+selected:  8
+selected:  7
+selected:  10
+
+Scene 8, Frame 98:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [5, 4]
+Agent 1 is adversarial 0.8616180419921875
+Agent 3 is adversarial 0.9999672174453735
+Agent 5 is adversarial 0.999866247177124
+Agent 6 is adversarial 0.9997925162315369
+Agent 1 is adversarial 0.9993497729301453
+selected:  9
+selected:  12
+selected:  10
+selected:  8
+selected:  7
+selected:  10
+
+Scene 8, Frame 99:
+all_agent_list: [0, 2, 3, 4, 5]
+Perturbation is applied on agent [3, 2]
+Agent 1 is adversarial 0.7876667976379395
+Agent 3 is adversarial 0.9999994039535522
+Agent 3 is adversarial 0.9963787198066711
+Agent 1 is adversarial 0.9990959167480469
+selected:  11
+selected:  12
+selected:  12
+selected:  8
+selected:  7
+selected:  10
+
+ Ego Agent:1
+robosac VALIDATION: Evaluated on 100 frames
+Total Neighbor Agents:5, Sampling Set Size: None, Number of Attackers: 2
+Expected guaranteed Consensus Set Size at p=0.99: 0
+Succeeded 0, Total 100, Success Rate: 0.0
+Sampling STEP MEAN: 0.0, MAX: 0.0, MIN:0.0
+Total STEP(including ego only step): MEAN: 0.0, MAX: 0.0, MIN:0.0
+FPS: MEAN: inf, MAX: inf, MIN:inf
+Sampling STEP:[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0.], Ego STEP:[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0.], Total STEP:[0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+ 0. 0. 0. 0.], FPS:[inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf inf inf inf inf]
+Box set matching threshold: 0.3
+Local mAP@0.5 from agent 0
+
+robosac.py:1069: RuntimeWarning: divide by zero encountered in true_divide
+  fpss = 1000 / (27*steps+17*ego_steps) # forward time: ego only: 17ms; collaborated: 27ms
+
++-------+------+------+--------+-------+
+| class | gts  | dets | recall | ap    |
++-------+------+------+--------+-------+
+| 0     | 1050 | 815  | 0.701  | 0.696 |
++-------+------+------+--------+-------+
+| mAP   |      |      |        | 0.696 |
++-------+------+------+--------+-------+
+Local mAP@0.7 from agent 0
+
++-------+------+------+--------+-------+
+| class | gts  | dets | recall | ap    |
++-------+------+------+--------+-------+
+| 0     | 1050 | 815  | 0.673  | 0.668 |
++-------+------+------+--------+-------+
+| mAP   |      |      |        | 0.668 |
++-------+------+------+--------+-------+
+Local mAP@0.5 from agent 1
+
++-------+------+------+--------+-------+
+| class | gts  | dets | recall | ap    |
++-------+------+------+--------+-------+
+| 0     | 1116 | 904  | 0.763  | 0.762 |
++-------+------+------+--------+-------+
+| mAP   |      |      |        | 0.762 |
++-------+------+------+--------+-------+
+Local mAP@0.7 from agent 1
+
++-------+------+------+--------+-------+
+| class | gts  | dets | recall | ap    |
++-------+------+------+--------+-------+
+| 0     | 1116 | 904  | 0.747  | 0.744 |
++-------+------+------+--------+-------+
+| mAP   |      |      |        | 0.744 |
++-------+------+------+--------+-------+
+Local mAP@0.5 from agent 2
+
++-------+------+------+--------+-------+
+| class | gts  | dets | recall | ap    |
++-------+------+------+--------+-------+
+| 0     | 1060 | 842  | 0.770  | 0.769 |
++-------+------+------+--------+-------+
+| mAP   |      |      |        | 0.769 |
++-------+------+------+--------+-------+
+Local mAP@0.7 from agent 2
+
++-------+------+------+--------+-------+
+| class | gts  | dets | recall | ap    |
++-------+------+------+--------+-------+
+| 0     | 1060 | 842  | 0.743  | 0.741 |
++-------+------+------+--------+-------+
+| mAP   |      |      |        | 0.741 |
++-------+------+------+--------+-------+
+Local mAP@0.5 from agent 3
+
++-------+-----+------+--------+-------+
+| class | gts | dets | recall | ap    |
++-------+-----+------+--------+-------+
+| 0     | 744 | 548  | 0.730  | 0.730 |
++-------+-----+------+--------+-------+
+| mAP   |     |      |        | 0.730 |
++-------+-----+------+--------+-------+
+Local mAP@0.7 from agent 3
+
++-------+-----+------+--------+-------+
+| class | gts | dets | recall | ap    |
++-------+-----+------+--------+-------+
+| 0     | 744 | 548  | 0.728  | 0.728 |
++-------+-----+------+--------+-------+
+| mAP   |     |      |        | 0.728 |
++-------+-----+------+--------+-------+
+Local mAP@0.5 from agent 4
+
++-------+-----+------+--------+-------+
+| class | gts | dets | recall | ap    |
++-------+-----+------+--------+-------+
+| 0     | 585 | 401  | 0.658  | 0.657 |
++-------+-----+------+--------+-------+
+| mAP   |     |      |        | 0.657 |
++-------+-----+------+--------+-------+
+Local mAP@0.7 from agent 4
+
++-------+-----+------+--------+-------+
+| class | gts | dets | recall | ap    |
++-------+-----+------+--------+-------+
+| 0     | 585 | 401  | 0.655  | 0.654 |
++-------+-----+------+--------+-------+
+| mAP   |     |      |        | 0.654 |
++-------+-----+------+--------+-------+
+Local mAP@0.5 from agent 5
+
++-------+-----+------+--------+-------+
+| class | gts | dets | recall | ap    |
++-------+-----+------+--------+-------+
+| 0     | 479 | 389  | 0.770  | 0.763 |
++-------+-----+------+--------+-------+
+| mAP   |     |      |        | 0.763 |
++-------+-----+------+--------+-------+
+Local mAP@0.7 from agent 5
+
++-------+-----+------+--------+-------+
+| class | gts | dets | recall | ap    |
++-------+-----+------+--------+-------+
+| 0     | 479 | 389  | 0.756  | 0.748 |
++-------+-----+------+--------+-------+
+| mAP   |     |      |        | 0.748 |
++-------+-----+------+--------+-------+
+Average Local mAP@0.5
+
++-------+------+------+--------+-------+
+| class | gts  | dets | recall | ap    |
++-------+------+------+--------+-------+
+| 0     | 5034 | 3899 | 0.735  | 0.733 |
++-------+------+------+--------+-------+
+| mAP   |      |      |        | 0.733 |
++-------+------+------+--------+-------+
+Average Local mAP@0.7
+
++-------+------+------+--------+-------+
+| class | gts  | dets | recall | ap    |
++-------+------+------+--------+-------+
+| 0     | 5034 | 3899 | 0.718  | 0.716 |
++-------+------+------+--------+-------+
+| mAP   |      |      |        | 0.716 |
++-------+------+------+--------+-------+
+Quantitative evaluation results of model from /data2/user2/senkang/CP-GuardBench/coperception/ckpt/meanfusion/epoch_49.pth, at epoch 49
+agent0 mAP@0.5 is 0.6955904364585876 and mAP@0.7 is 0.6684601306915283
+agent1 mAP@0.5 is 0.7618124485015869 and mAP@0.7 is 0.7442666888237
+agent2 mAP@0.5 is 0.7693209052085876 and mAP@0.7 is 0.7408519387245178
+agent3 mAP@0.5 is 0.7298213839530945 and mAP@0.7 is 0.7284674048423767
+agent4 mAP@0.5 is 0.6574072241783142 and mAP@0.7 is 0.654100239276886
+agent5 mAP@0.5 is 0.7634164690971375 and mAP@0.7 is 0.7483144402503967
+average local mAP@0.5 is 0.733148992061615 and average local mAP@0.7 is 0.7156391739845276

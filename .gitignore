@@ -6,7 +6,10 @@ V2X-Sim-*
 CP-GuardBench*
 
 nohup.out
-
+Mean-Shifted-Anomaly-Detection
+CL
 
 cpguard/logs
 cpguard/runs
+
+runs

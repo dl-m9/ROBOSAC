@@ -214,6 +214,11 @@ def eval_map(
     Returns:
         tuple: (mAP, [dict, dict, ...])
     """
+    if not det_results:
+        print_log("det_results is empty. Skipping evaluation.", logger=logger)
+        return 0.0, []
+    
+    
     assert len(det_results) == len(annotations)
 
     num_imgs = len(det_results)

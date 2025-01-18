@@ -182,7 +182,8 @@ class DetModelBase(nn.Module):
         trial_agent_id=None,
         pert=None,
         attacker_list=None,
-        eps=None
+        eps=None,
+        adv_method=None
     ) -> None:
         """Append the features of the neighbors of current agent to the neighbor_feat_list list.
 
@@ -213,7 +214,7 @@ class DetModelBase(nn.Module):
                         size,
                         trans_matrices,
                     )
-                if_j_attacked = 0
+                if_j_attacked = 'normal'
                 original_warp_feat = warp_feat
                 
                 if pert is not None and j in attacker_list:
@@ -222,7 +223,7 @@ class DetModelBase(nn.Module):
                     # Apply perturbation
                     
                     warp_feat = warp_feat + eta
-                    if_j_attacked = 1
+                    if_j_attacked = adv_method
                 
                 
                 
@@ -237,7 +238,7 @@ class DetModelBase(nn.Module):
 
                 if torch.equal(original_warp_feat, torch.zeros(256, 32,32).to('cuda')):
                     warp_feat = torch.zeros(256, 32,32).to('cuda')
-                    if_j_attacked = 0
+                    if_j_attacked = 'normal'
                 self.attacked_feature_dict[j] = [warp_feat, if_j_attacked]
 
 
