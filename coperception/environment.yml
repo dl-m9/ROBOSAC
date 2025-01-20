@@ -1,4 +1,4 @@
-name: coperception
+name: coperception2
 
 dependencies:
   - python==3.7.2

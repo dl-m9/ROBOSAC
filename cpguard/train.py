@@ -118,7 +118,9 @@ if __name__ == '__main__':
     leave_one_out = args.leave_one_out
     calculate_similarity = False
 
-    data_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/generated'
+    data_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/generated2'
+    if leave_one_out:
+        data_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData/generated2'
     train_dataset = CPGuardDataset(data_dir, if_residual=if_residual)
     train_dataloader = DataLoader(train_dataset, batch_size=1, shuffle=False)
 
@@ -155,7 +157,7 @@ if __name__ == '__main__':
         if not resume:
             log_path = '/data2/user2/senkang/CP-GuardBench/cpguard/logs'
             current_time = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
-            log_dir = log_path+f'/{current_time}' + '_CADet'
+            log_dir = log_path+f'/{current_time}' + '_MSC_leave_one_out_' + leave_one_out
             os.makedirs(log_dir, exist_ok=True)
 
         if msc_loss:

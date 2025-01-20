@@ -8,6 +8,8 @@ from models import ResNetBinaryClassifier
 import numpy as np
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
+import argparse
+
 
 def plot_roc_curve(all_labels, all_predictions, save_path=None):
     # Calculate ROC curve points
@@ -112,11 +114,13 @@ def test_model(eval_data_dir, pretrained_weights_path):
 if __name__ == '__main__':
     # leave_one_out_Test = True
     # if leave_one_out_Test:
-
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--delta', type=str, default='0.2', help='delta value')
+    args = parser.parse_args()
     # else
     base_dir = '/data2/user2/senkang/CP-GuardBench/CP-GuardBench_RawData'
-    pretrained_weights_path = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/2024-11-30-18-42-51_CADet/10.pth'
-    # pretrained_weights_path = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/2024-11-28-19-05-06_msc_loss/49.pth'
+    # pretrained_weights_path = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/2024-11-30-18-42-51_CADet/10.pth'
+    pretrained_weights_path = '/data2/user2/senkang/CP-GuardBench/cpguard/logs/2024-11-28-19-05-06_msc_loss/49.pth'
 
     eval_dirs = [
         'test_pgd_',
@@ -126,7 +130,7 @@ if __name__ == '__main__':
         'test_bim_'
     ]
     # eval_dirs = ['test']
-    delta = '0.5'
+    delta = args.delta
 
     overall_results = {}
     all_labels = []
@@ -162,7 +166,7 @@ if __name__ == '__main__':
 
     print("Overall Results:")
     for eval_dir, results in overall_results.items():
-        print(f"{eval_dir}:")
+        print(f"{eval_dir}_{delta}:")
         for metric, value in results.items():
             print(f"  {metric}: {value:.4f}")
         print()
@@ -176,4 +180,4 @@ if __name__ == '__main__':
         print(f"{metric}: {value:.4f}")
 
     # Plot and save overall ROC curve
-    plot_roc_curve(all_labels, all_predictions, save_path='roc_curve/overall_roc_'+str(delta)+'.png')
+    plot_roc_curve(all_labels, all_predictions, save_path='roc_curve/overall_roc_'+str(delta)+'_msc.png')
